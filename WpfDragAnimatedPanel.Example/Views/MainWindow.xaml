@@ -1,0 +1,73 @@
+﻿<Window x:Class="WpfDragAnimatedPanel.Example.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfDragAnimatedPanel.Example"
+        xmlns:wpfDragAnimatedPanel="clr-namespace:WpfDragAnimatedPanel;assembly=WpfDragAnimatedPanel"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:converters="clr-namespace:WpfDragAnimatedPanel.Example.Converters"
+        Width="800"
+        Height="600"
+        Background="DimGray"
+        Title="MainWindow">
+    <Window.Resources>
+        <converters:HorizontalScrollBarVisibilityConverter x:Key="HorizontalScrollBarVisibilityConverter"/>
+        <ObjectDataProvider x:Key="FillTypes"
+                            MethodName="GetValues" 
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="wpfDragAnimatedPanel:FillType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+ 
+        <StackPanel Grid.Row="0" 
+                    Margin="5"
+                    Orientation="Horizontal">
+            <TextBlock Margin="0 0 10 0"
+                       VerticalAlignment="Center"
+                       Text="FillType: "/>
+            <ComboBox Width="200"
+                      VerticalAlignment="Center"
+                      ItemsSource="{Binding Source={StaticResource FillTypes}}"
+                      SelectedItem="{Binding FillType, Mode=TwoWay}"
+                      SelectionChanged="FillTypesChangedEventHandler"/>
+        </StackPanel>
+
+        <CheckBox Grid.Row="1" 
+                  Margin="5"
+                  IsChecked="{Binding AutoSizeMode}"
+                  Click="AutoSizeModeChangedEventHandler">Auto size for vertical and horizontal mode.</CheckBox>
+
+        <ListBox Grid.Row="2"
+                 x:Name="TestListBox"
+                 Margin="5"
+                 ItemsSource="{Binding Images}"
+                 Background="WhiteSmoke"
+                 ScrollViewer.HorizontalScrollBarVisibility="{Binding FillType, Converter={StaticResource HorizontalScrollBarVisibilityConverter}}"
+                 PreviewMouseWheel="TestListBoxPreviewMouseWheelEventHandler"
+                 SizeChanged="TestListBoxSizeChangedEventHandler">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <wpfDragAnimatedPanel:DragAnimatedPanel FillType="{Binding FillType}"
+                                                            HorizontalAlignment="Left"
+                                                            ItemWidth="248"
+                                                            ItemHeight="350"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Image Margin="10" 
+                           Source="{Binding ImageSource}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

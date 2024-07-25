@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDragAnimatedPanel", "WpfDragAnimatedPanel\WpfDragAnimatedPanel.csproj", "{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDragAnimatedPanel.Example", "WpfDragAnimatedPanel.Example\WpfDragAnimatedPanel.Example.csproj", "{6CED6024-5E20-4AFB-B93F-B96E346167C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}.Release|x86.Build.0 = Release|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Debug|x86.Build.0 = Debug|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Release|x86.ActiveCfg = Release|Any CPU
+		{6CED6024-5E20-4AFB-B93F-B96E346167C9}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5FEF216D-7938-4A9C-B6D3-8876C0EC800B}
+	EndGlobalSection
+EndGlobal
