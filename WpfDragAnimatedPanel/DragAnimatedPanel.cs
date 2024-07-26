@@ -104,18 +104,21 @@ namespace WpfDragAnimatedPanel
                 child.Measure(itemContainerSize);
             }
 
-            if (FillType == FillType.Horizontal)
+            int count = Children.Count;
+            if (count == 0)
             {
-                _calculatedSize = new Size(Children.Count * ItemWidth, ItemHeight);
+                _calculatedSize = new Size();
             }
-            else if(FillType == FillType.Vertical)
+            else if (FillType == FillType.Horizontal)
             {
-                _calculatedSize = new Size(ItemWidth, Children.Count * ItemHeight);
+                _calculatedSize = new Size(count * ItemWidth, ItemHeight);
+            }
+            else if (FillType == FillType.Vertical)
+            {
+                _calculatedSize = new Size(ItemWidth, count * ItemHeight);
             }
             else
             {
-                int count = Children.Count;
-
                 if (availableSize.Width < ItemWidth)
                 {
                     _calculatedSize = new Size(ItemWidth, count * ItemHeight);
