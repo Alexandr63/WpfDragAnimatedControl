@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using WpfDragAnimatedPanel.Commands;
+using WpfDragAnimatedPanel.LayoutStrategies;
 using WpfDragAnimatedPanel.Tools;
 
 namespace WpfDragAnimatedPanel
@@ -42,23 +43,6 @@ namespace WpfDragAnimatedPanel
 
         #endregion
 
-        #region Dependency Properties
-
-        public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(nameof(ItemWidth), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(248d, MeasureControlByDependencyPropertyChanged));
-        
-        public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(nameof(ItemHeight), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(350d, MeasureControlByDependencyPropertyChanged));
-
-        public static readonly DependencyProperty FillTypeProperty = DependencyProperty.Register(nameof(FillType), typeof(FillType), typeof(DragAnimatedPanel), new UIPropertyMetadata(FillType.Wrap, MeasureControlByDependencyPropertyChanged));
-
-        /// <summary>
-        /// Using a DependencyProperty as the backing store for AnimationMilliseconds.  This enables animation, styling, binding, etc...
-        /// </summary>
-        public static readonly DependencyProperty AnimationMillisecondsProperty = DependencyProperty.Register(nameof(AnimationMilliseconds), typeof(int), typeof(DragAnimatedPanel), new UIPropertyMetadata(75, MeasureControlByDependencyPropertyChanged));
-
-        public static readonly DependencyProperty SwapCommandProperty = DependencyProperty.Register(nameof(SwapCommand), typeof(ICommand), typeof(DragAnimatedPanel), new UIPropertyMetadata(null));
-
-        #endregion
-        
         #region Properties
 
         public double ItemWidth
@@ -67,17 +51,15 @@ namespace WpfDragAnimatedPanel
             set => SetValue(ItemWidthProperty, value);
         }
 
+        public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(nameof(ItemWidth), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(248d, MeasureControlByDependencyPropertyChanged));
+
         public double ItemHeight
         {
             get => (double)GetValue(ItemHeightProperty);
             set => SetValue(ItemHeightProperty, value);
         }
-        
-        public int AnimationMilliseconds
-        {
-            get => (int)GetValue(AnimationMillisecondsProperty);
-            set => SetValue(AnimationMillisecondsProperty, value);
-        }
+
+        public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(nameof(ItemHeight), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(350d, MeasureControlByDependencyPropertyChanged));
 
         public FillType FillType
         {
@@ -85,12 +67,27 @@ namespace WpfDragAnimatedPanel
             set => SetValue(FillTypeProperty, value);
         }
 
+        public static readonly DependencyProperty FillTypeProperty = DependencyProperty.Register(nameof(FillType), typeof(FillType), typeof(DragAnimatedPanel), new UIPropertyMetadata(FillType.Wrap, MeasureControlByDependencyPropertyChanged));
+
+        public int AnimationMilliseconds
+        {
+            get => (int)GetValue(AnimationMillisecondsProperty);
+            set => SetValue(AnimationMillisecondsProperty, value);
+        }
+
+        /// <summary>
+        /// Using a DependencyProperty as the backing store for AnimationMilliseconds.  This enables animation, styling, binding, etc...
+        /// </summary>
+        public static readonly DependencyProperty AnimationMillisecondsProperty = DependencyProperty.Register(nameof(AnimationMilliseconds), typeof(int), typeof(DragAnimatedPanel), new UIPropertyMetadata(75, MeasureControlByDependencyPropertyChanged));
+
         public ICommand SwapCommand
         {
             get => (ICommand)GetValue(SwapCommandProperty);
             set => SetValue(SwapCommandProperty, value);
         }
 
+        public static readonly DependencyProperty SwapCommandProperty = DependencyProperty.Register(nameof(SwapCommand), typeof(ICommand), typeof(DragAnimatedPanel), new UIPropertyMetadata(null));
+        
         #endregion
 
         #region Override Methods
@@ -109,11 +106,11 @@ namespace WpfDragAnimatedPanel
             {
                 _calculatedSize = new Size();
             }
-            else if (FillType == FillType.Horizontal)
+            else if (FillType == FillType.Row)
             {
                 _calculatedSize = new Size(count * ItemWidth, ItemHeight);
             }
-            else if (FillType == FillType.Vertical)
+            else if (FillType == FillType.Column)
             {
                 _calculatedSize = new Size(ItemWidth, count * ItemHeight);
             }
@@ -217,11 +214,11 @@ namespace WpfDragAnimatedPanel
             int rowIndex = (int)Math.Truncate(y / ItemHeight);
 
             int columns;
-            if (FillType == FillType.Horizontal)
+            if (FillType == FillType.Row)
             {
                 columns = Children.Count;
             }
-            else if (FillType == FillType.Vertical)
+            else if (FillType == FillType.Column)
             {
                 columns = 1;
             }
@@ -281,11 +278,11 @@ namespace WpfDragAnimatedPanel
             }
 
             Size calculatedSize;
-            if (FillType == FillType.Horizontal)
+            if (FillType == FillType.Row)
             {
                 calculatedSize = new Size(Children.Count * ItemWidth, ItemHeight);
             }
-            else if (FillType == FillType.Vertical)
+            else if (FillType == FillType.Column)
             {
                 calculatedSize = new Size(ItemWidth, Children.Count * ItemHeight);
             }

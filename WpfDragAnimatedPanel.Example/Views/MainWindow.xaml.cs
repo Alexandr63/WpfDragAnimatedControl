@@ -78,12 +78,12 @@ namespace WpfDragAnimatedPanel.Example.Views
             {
                 switch (dragAnimatedPanel.FillType)
                 {
-                    case FillType.Horizontal:
+                    case FillType.Row:
                         height = panelNewSize.Height - SCROLL_SIZE; // consider the scroll size
                         width = oldWidth * height / oldHeight;
 
                         break;
-                    case FillType.Vertical:
+                    case FillType.Column:
                         width = panelNewSize.Width - SCROLL_SIZE; // consider the scroll size
                         height = oldHeight * width / oldWidth;
 
@@ -120,11 +120,7 @@ namespace WpfDragAnimatedPanel.Example.Views
         private void TestListBoxSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
             DragAnimatedPanel dragAnimatedPanel = ControlsHelper.GetDragAnimatedPanel((ListBox)sender);
-
-            ScrollViewer scrollViewer = ControlsHelper.GetVisualChild<ScrollViewer>((ListBox)sender);
-            double w = scrollViewer.ViewportWidth;
-            double h = scrollViewer.ViewportHeight;
-
+            
             UpdateDragAnimatedPanelView(dragAnimatedPanel, e.NewSize, null);
         }
 

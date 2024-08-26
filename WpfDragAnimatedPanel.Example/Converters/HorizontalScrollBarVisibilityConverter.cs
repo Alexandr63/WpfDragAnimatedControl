@@ -9,7 +9,7 @@ namespace WpfDragAnimatedPanel.Example.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (FillType)value == FillType.Horizontal ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled;
+            return (FillType)value == FillType.Row ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

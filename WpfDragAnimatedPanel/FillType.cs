@@ -2,8 +2,8 @@
 {
     public enum FillType
     {
-        Horizontal,
-        Vertical,
-        Wrap
+        Wrap,
+        Row,
+        Column
     }
 }
