@@ -18,18 +18,30 @@ namespace WpfDragAnimatedPanel.Example.ViewModels
 
         public MainWindowViewModel()
         {
+            //Images = new ExtendedObservableCollection<ImageModel>()
+            //{
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/0.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/1.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/2.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/3.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/4.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/5.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/6.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/7.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/8.jpg") },
+            //    new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/9.jpg") }
+            //};
+
             Images = new ExtendedObservableCollection<ImageModel>()
             {
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/0.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/1.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/2.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/3.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/4.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/5.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/6.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/7.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/8.jpg") },
-                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images/9.jpg") }
+                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/0.jpg"), Tag = "0" },
+                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/1.jpg"), Tag = "1" },
+                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/2.jpg"), Tag = "2" },
+                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/3-4.jpg"), Tag = "3-4" },
+                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/5-6.jpg"), Tag = "5-6" },
+                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/7a.jpg"), Tag = "7a" },
+                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/8a.jpg"), Tag = "8a" },
+                new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/9.jpg"), Tag = "9" }
             };
         }
 

@@ -87,14 +87,17 @@ namespace WpfDragAnimatedPanel
                 #region this lines is for keepn draged item inside control bounds
 
                 DoScroll();
-
+                
+                int index = _layoutStrategy.GetIndex(mousePos);
+                IDragItemSize element = (IDragItemSize)((FrameworkElement)Children[index]).DataContext;
+                
                 if (_x + difX < _rectOnDrag.Location.X)
                 {
                     _x = 0;
                 }
-                else if (ItemWidth + _x + difX > _rectOnDrag.Location.X + _rectOnDrag.Width)
+                else if (element.Width + _x + difX > _rectOnDrag.Location.X + _rectOnDrag.Width)
                 {
-                    _x = _rectOnDrag.Location.X + _rectOnDrag.Width - ItemWidth;
+                    _x = _rectOnDrag.Location.X + _rectOnDrag.Width - element.Width;
                 }
                 else if (mousePos.X > _rectOnDrag.Location.X && mousePos.X < _rectOnDrag.Location.X + _rectOnDrag.Width)
                 {
@@ -105,9 +108,9 @@ namespace WpfDragAnimatedPanel
                 {
                     _y = 0;
                 }
-                else if (ItemHeight + _y + difY > _rectOnDrag.Location.Y + _rectOnDrag.Height)
+                else if (element.Height + _y + difY > _rectOnDrag.Location.Y + _rectOnDrag.Height)
                 {
-                    _y = _rectOnDrag.Location.Y + _rectOnDrag.Height - ItemHeight;
+                    _y = _rectOnDrag.Location.Y + _rectOnDrag.Height - element.Height;
                 }
                 else if (mousePos.Y > _rectOnDrag.Location.Y && mousePos.Y < _rectOnDrag.Location.Y + _rectOnDrag.Height)
                 {
@@ -120,7 +123,7 @@ namespace WpfDragAnimatedPanel
                 _lastMousePosX = mousePos.X;
                 _lastMousePosY = mousePos.Y;
                 _lastMouseMoveTime = e.Timestamp;
-                SwapElement(_x + ItemWidth / 2, _y + ItemHeight / 2);
+                SwapElement(_x + element.Width / 2, _y + element.Height / 2);
             }
         }
 
@@ -170,7 +173,7 @@ namespace WpfDragAnimatedPanel
 
         private void SwapElement(double x, double y)
         {
-            int index = GetIndexFromPoint(x, y);
+            int index = _layoutStrategy.GetIndex(new Point(x, y));
             if (index == _draggedIndex || index < 0)
             {
                 return;
@@ -218,7 +221,7 @@ namespace WpfDragAnimatedPanel
             {
                 DraggedElement = null;
 
-                InvalidateArrange();
+                InvalidateMeasure();
             }
         }
 

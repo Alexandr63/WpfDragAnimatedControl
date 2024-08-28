@@ -27,8 +27,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
  
         <StackPanel Grid.Row="0" 
+                    Grid.Column="0"
                     Margin="5"
                     Orientation="Horizontal">
             <TextBlock Margin="0 0 10 0"
@@ -42,11 +47,20 @@
         </StackPanel>
 
         <CheckBox Grid.Row="1" 
+                  Grid.Column="0"
                   Margin="5"
                   IsChecked="{Binding AutoSizeMode}"
                   Click="AutoSizeModeChangedEventHandler">Auto size for vertical and horizontal mode.</CheckBox>
 
+        <Button Grid.Row="0"
+                Grid.Column="1"
+                Margin="5"
+                Width="100"
+                Click="TestButtonClickEventHandler">Test</Button>
+
         <ListBox Grid.Row="2"
+                 Grid.Column="0"
+                 Grid.ColumnSpan="2"
                  x:Name="TestListBox"
                  Margin="5"
                  ItemsSource="{Binding Images}"
@@ -58,14 +72,16 @@
                 <ItemsPanelTemplate>
                     <wpfDragAnimatedPanel:DragAnimatedPanel FillType="{Binding FillType}"
                                                             HorizontalAlignment="Left"
-                                                            ItemWidth="248"
-                                                            ItemHeight="350"/>
+                                                            Background="DimGray"/>
+                                                            <!--ItemWidth="248" ItemHeight="350"-->
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Image Margin="10" 
-                           Source="{Binding ImageSource}"/>
+                    <Border Margin="10" Padding="20" Width="{Binding Width}" Height="{Binding Height}" Background="LightBlue" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Image Source="{Binding ImageSource}" />
+                    </Border>
+                    
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

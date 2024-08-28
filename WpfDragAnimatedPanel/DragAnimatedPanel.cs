@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Xml.Linq;
 using WpfDragAnimatedPanel.Commands;
 using WpfDragAnimatedPanel.LayoutStrategies;
 using WpfDragAnimatedPanel.Tools;
@@ -19,8 +23,7 @@ namespace WpfDragAnimatedPanel
         private Size _calculatedSize;
         private bool _isNotFirstArrange = false;
 
-        private int _columns;
-        private int _rows;
+        private ILayoutStrategy _layoutStrategy;
 
         #endregion
 
@@ -34,6 +37,7 @@ namespace WpfDragAnimatedPanel
         public DragAnimatedPanel() : base()
         {
             SwapCommand = GetDefaultSwapCommand();
+            UpdateLayoutStrategy();
 
             AddHandler(Mouse.MouseMoveEvent, new MouseEventHandler(OnMouseMove), false);
             AddHandler(MouseDownEvent, new MouseButtonEventHandler(OnMouseDown), true);
@@ -45,13 +49,14 @@ namespace WpfDragAnimatedPanel
 
         #region Properties
 
+        /*
         public double ItemWidth
         {
             get => (double)GetValue(ItemWidthProperty);
             set => SetValue(ItemWidthProperty, value);
         }
 
-        public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(nameof(ItemWidth), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(248d, MeasureControlByDependencyPropertyChanged));
+        public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(nameof(ItemWidth), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(248d, AnimationMillisecondsDependencyPropertyChanged));
 
         public double ItemHeight
         {
@@ -59,7 +64,8 @@ namespace WpfDragAnimatedPanel
             set => SetValue(ItemHeightProperty, value);
         }
 
-        public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(nameof(ItemHeight), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(350d, MeasureControlByDependencyPropertyChanged));
+        public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(nameof(ItemHeight), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(350d, AnimationMillisecondsDependencyPropertyChanged));
+        */
 
         public FillType FillType
         {
@@ -67,8 +73,8 @@ namespace WpfDragAnimatedPanel
             set => SetValue(FillTypeProperty, value);
         }
 
-        public static readonly DependencyProperty FillTypeProperty = DependencyProperty.Register(nameof(FillType), typeof(FillType), typeof(DragAnimatedPanel), new UIPropertyMetadata(FillType.Wrap, MeasureControlByDependencyPropertyChanged));
-
+        public static readonly DependencyProperty FillTypeProperty = DependencyProperty.Register(nameof(FillType), typeof(FillType), typeof(DragAnimatedPanel), new UIPropertyMetadata(FillType.Wrap, FillTypePropertyDependencyPropertyChanged));
+        
         public int AnimationMilliseconds
         {
             get => (int)GetValue(AnimationMillisecondsProperty);
@@ -78,7 +84,7 @@ namespace WpfDragAnimatedPanel
         /// <summary>
         /// Using a DependencyProperty as the backing store for AnimationMilliseconds.  This enables animation, styling, binding, etc...
         /// </summary>
-        public static readonly DependencyProperty AnimationMillisecondsProperty = DependencyProperty.Register(nameof(AnimationMilliseconds), typeof(int), typeof(DragAnimatedPanel), new UIPropertyMetadata(75, MeasureControlByDependencyPropertyChanged));
+        public static readonly DependencyProperty AnimationMillisecondsProperty = DependencyProperty.Register(nameof(AnimationMilliseconds), typeof(int), typeof(DragAnimatedPanel), new UIPropertyMetadata(75, AnimationMillisecondsDependencyPropertyChanged));
 
         public ICommand SwapCommand
         {
@@ -94,11 +100,11 @@ namespace WpfDragAnimatedPanel
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            Size itemContainerSize = new Size(ItemWidth, ItemHeight);
+            // Size itemContainerSize = new Size(ItemWidth, ItemHeight);
 
             foreach (UIElement child in Children)
             {
-                child.Measure(itemContainerSize);
+                child.Measure(GetDragItemSize(child).GetSize());
             }
 
             int count = Children.Count;
@@ -106,39 +112,47 @@ namespace WpfDragAnimatedPanel
             {
                 _calculatedSize = new Size();
             }
-            else if (FillType == FillType.Row)
-            {
-                _calculatedSize = new Size(count * ItemWidth, ItemHeight);
-            }
-            else if (FillType == FillType.Column)
-            {
-                _calculatedSize = new Size(ItemWidth, count * ItemHeight);
-            }
-            else
-            {
-                if (availableSize.Width < ItemWidth)
-                {
-                    _calculatedSize = new Size(ItemWidth, count * ItemHeight);
-                }
-                else
-                {
-                    _columns = (int)Math.Truncate(availableSize.Width / ItemWidth);
-                    _rows = count / _columns;
-                    if (count % _columns != 0)
-                    {
-                        _rows++;
-                    }
+            //else if (FillType == FillType.Row)
+            //{
+            //    _calculatedSize = new Size(count * ItemWidth, ItemHeight);
+            //}
+            //else if (FillType == FillType.Column)
+            //{
+            //    _calculatedSize = new Size(ItemWidth, count * ItemHeight);
+            //}
+            //else
+            //{
+            //    if (availableSize.Width < ItemWidth)
+            //    {
+            //        _calculatedSize = new Size(ItemWidth, count * ItemHeight);
+            //    }
+            //    else
+            //    {
+            //        _columns = (int)Math.Truncate(availableSize.Width / ItemWidth);
+            //        _rows = count / _columns;
+            //        if (count % _columns != 0)
+            //        {
+            //            _rows++;
+            //        }
 
-                    _calculatedSize = new Size(_columns * ItemWidth, _rows * ItemHeight);
-                }
+            //        _calculatedSize = new Size(_columns * ItemWidth, _rows * ItemHeight);
+            //    }
+            //}
+
+            List<Size> childSizes = new List<Size>(Children.Count);
+            foreach (UIElement child in Children)
+            {
+                childSizes.Add(child.DesiredSize);
             }
 
+            _layoutStrategy.Calculate(availableSize, childSizes, DraggedElement != null);
+            _calculatedSize = _layoutStrategy.ResultSize;
+            
             return _calculatedSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            Size finalItemSize = new Size(ItemWidth, ItemHeight);
             // if is animated then arrange elements to 0,0, and then put them on its location using the transform
             foreach (UIElement child in InternalChildren)
             {
@@ -152,7 +166,7 @@ namespace WpfDragAnimatedPanel
                 }
 
                 //locate all children in 0,0 point //TODO: use infinity and then scale each element to items size
-                child.Arrange(new Rect(new Point(0, 0), finalItemSize)); //when use transformations change to childs.DesireSize
+                child.Arrange(new Rect(new Point(0, 0), GetDragItemSize(child).GetSize())); //when use transformations change to childs.DesireSize
             }
 
             AnimateAll();
@@ -168,6 +182,37 @@ namespace WpfDragAnimatedPanel
         #endregion
 
         #region Private Methods
+
+        private void UpdateLayoutStrategy()
+        {
+            switch (FillType)
+            {
+                case FillType.Column:
+                    _layoutStrategy = new ColumnLayoutStrategy();
+                    break;
+                case FillType.Row:
+                    _layoutStrategy = new RowLayoutStrategy();
+                    break;
+                case FillType.Wrap:
+                    _layoutStrategy = new WrapLayoutStrategy();
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown FillType {FillType}");
+                    _layoutStrategy = new TableLayoutStrategy(); // TODO сделать вариант с Table
+            }
+
+            InvalidateMeasure();
+        }
+
+        private IDragItemSize GetDragItemSize(UIElement element)
+        {
+            return (IDragItemSize)((FrameworkElement)element).DataContext;
+        }
+
+        private IDragItemSize GetDragItemSize(FrameworkElement element)
+        {
+            return (IDragItemSize) element.DataContext;
+        }
 
         private ICommand GetDefaultSwapCommand()
         {
@@ -208,48 +253,93 @@ namespace WpfDragAnimatedPanel
             return new Point(trans.X, trans.Y);
         }
 
-        private int GetIndexFromPoint(double x, double y)
-        {
-            int columnIndex = (int)Math.Truncate(x / ItemWidth);
-            int rowIndex = (int)Math.Truncate(y / ItemHeight);
+        //private int GetIndexFromPoint(double x, double y)
+        //{
+        //    int columnIndex = (int)Math.Truncate(x / ItemWidth);
+        //    int rowIndex = (int)Math.Truncate(y / ItemHeight);
 
-            int columns;
-            if (FillType == FillType.Row)
-            {
-                columns = Children.Count;
-            }
-            else if (FillType == FillType.Column)
-            {
-                columns = 1;
-            }
-            else
-            {
-                columns = _columns;
-            }
+        //    int columns;
+        //    if (FillType == FillType.Row)
+        //    {
+        //        columns = Children.Count;
+        //    }
+        //    else if (FillType == FillType.Column)
+        //    {
+        //        columns = 1;
+        //    }
+        //    else
+        //    {
+        //        columns = _columns;
+        //    }
 
-            return columns * rowIndex + columnIndex;
-        }
+        //    return columns * rowIndex + columnIndex;
+        //}
 
         private void AnimateAll()
         {
-            //Apply exactly the same algorithm, but inside of Arrange a call AnimateTo method
-            double colPosition = 0;
-            double rowPosition = 0;
-            foreach (UIElement child in Children)
+            if (Children.Count == 0)
             {
+                return;
+            }
+
+            double horizontalPosition = 0;
+            double verticalPosition = 0;
+
+            System.Diagnostics.Debug.WriteLine($">>> AnimateAll() _calculatedSize:{_calculatedSize}");
+            int rowIndex = 0;
+            for (int i = 0; i < Children.Count; i++)
+            {
+                UIElement child = Children[i];
+                //drag will locate dragged element
                 if (child != DraggedElement)
                 {
-                    AnimateTo(child, colPosition, rowPosition, _isNotFirstArrange ? AnimationMilliseconds : 0);
+                    AnimateTo(child, horizontalPosition, verticalPosition, _isNotFirstArrange ? AnimationMilliseconds : 0);
+                    System.Diagnostics.Debug.WriteLine($">>> AnimateAll() index:{i} {((FrameworkElement)child).DataContext.ToString()} to position {horizontalPosition};{verticalPosition}");
                 }
 
-                //drag will locate dragged element
-                colPosition += ItemWidth;
-                if (colPosition + 1 > _calculatedSize.Width)
+                DragItemLayoutInfo currentLayoutInfo = _layoutStrategy.GetLayoutInfo(i);
+                horizontalPosition += currentLayoutInfo.Size.Width;
+
+                if (i + 1 < Children.Count)
                 {
-                    colPosition = 0;
-                    rowPosition += ItemHeight;
+                    DragItemLayoutInfo nextLayoutInfo = _layoutStrategy.GetLayoutInfo(i + 1);
+                    if (nextLayoutInfo.RowIndex > rowIndex)
+                    {
+                        rowIndex++;
+                        horizontalPosition = 0;
+                        verticalPosition += _layoutStrategy.GetRowHeightByElementIndex(i + 1); // nextLayoutInfo.Size.Height;
+                    }
                 }
+
+
+                /*
+                horizontalPosition += _layoutStrategy.GetColumnWidthByElementIndex(i);
+
+                if (horizontalPosition + 1 > _calculatedSize.Width)
+                {
+                    horizontalPosition = 0;
+                    verticalPosition += _layoutStrategy.GetRowHeightByElementIndex(i);
+                }
+                */
             }
+
+            // Старая версия с фиксированным размером 
+            //int elementIndex = 0;
+            //foreach (UIElement child in Children)
+            //{
+
+
+            //    elementIndex++;
+            //    if (elementIndex < Children.Count)
+            //    {
+            //        colPosition += _layoutStrategy.GetColumnWidthByElementIndex(elementIndex);
+            //        if (colPosition + 1 > _calculatedSize.Width)
+            //        {
+            //            colPosition = 0;
+            //            rowPosition += _layoutStrategy.GetRowHeightByElementIndex(elementIndex);
+            //        }
+            //    }
+            //}
         }
 
         private void AnimateTo(UIElement child, double x, double y, int duration)
@@ -272,6 +362,11 @@ namespace WpfDragAnimatedPanel
 
         private void MeasureControl()
         {
+            // TODO подумать как реализовать
+
+            return;
+
+            /*
             if (Children.Count == 0)
             {
                 return;
@@ -295,12 +390,18 @@ namespace WpfDragAnimatedPanel
             {
                 _calculatedSize = calculatedSize;
                 Measure(_calculatedSize);
-            }
+            }*/
         }
 
-        private static void MeasureControlByDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void AnimationMillisecondsDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DragAnimatedPanel)d).MeasureControl();
+            // ((DragAnimatedPanel)d).MeasureControl();
+            ((DragAnimatedPanel)d).InvalidateMeasure();
+        }
+
+        private static void FillTypePropertyDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DragAnimatedPanel)d).UpdateLayoutStrategy();
         }
 
         #endregion
