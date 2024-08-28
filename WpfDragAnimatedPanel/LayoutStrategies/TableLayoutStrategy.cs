@@ -7,7 +7,7 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
 {
     /// <summary>
     /// Стратегия отображения дочерних элементов в виде таблицы с построчным заполнением с различной шириной строк.
-    /// TODO переделать, кривая логика в Calculate и вложенных методах. Избавиться от _colWidths (заменить на лист), _columnCount и, возможно _elementCount
+    /// TODO переделать, кривая логика в MeasureLayout и вложенных методах. Избавиться от _colWidths (заменить на лист), _columnCount и, возможно _elementCount
     /// </summary>
     public class TableLayoutStrategy : ILayoutStrategy
     {
@@ -24,7 +24,7 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
 
         public Size ResultSize => _colWidths != null && _rowHeights.Any() ? new Size(_colWidths.Sum(), _rowHeights.Sum()) : new Size(0, 0);
 
-        public void Calculate(Size availableSize, List<Size> measures, bool isDragging)
+        public void MeasureLayout(Size availableSize, List<Size> measures, bool isDragging)
         {
             BaseCalculation(availableSize, measures, isDragging);
             AdjustEmptySpace(availableSize);

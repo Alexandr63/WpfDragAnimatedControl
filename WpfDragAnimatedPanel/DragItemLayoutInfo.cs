@@ -2,5 +2,18 @@
 
 namespace WpfDragAnimatedPanel
 {
-    public record DragItemLayoutInfo (int RowIndex, int ColumnIndex, Size Size/*, double RowHeight, double ColumnWidth*/);
+    public class DragItemLayoutInfo
+    {
+        public DragItemLayoutInfo()
+        {
+        }
+
+        public int RowIndex { get; set; }
+
+        public int ColumnIndex { get; set; }
+
+        public double ColumnWidth { get; set; }
+
+        public double RowHeight { get; set; }
+    }
 }

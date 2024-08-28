@@ -24,9 +24,9 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
 
         public Size ResultSize => _rowHeights.Any() ? new Size(_rows.Select(row => row.Sum(item => item.Width)).Max(), _rowHeights.Sum()) : new Size(0, 0);
 
-        public void Calculate(Size availableSize, List<Size> measures, bool isDragging)
+        public void MeasureLayout(Size availableSize, List<Size> measures, bool isDragging)
         {
-            System.Diagnostics.Debug.WriteLine($">>> WrapLayoutStrategy Calculate availableSize:{availableSize}");
+            System.Diagnostics.Debug.WriteLine($">>> WrapLayoutStrategy MeasureLayout availableSize:{availableSize}");
 
             if (!isDragging)
             {
@@ -47,9 +47,9 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
             int itemIndex = 0;
             bool isNewRow = true;
 
-int rowIndex = 0;
-int columnIndex = 0;
-_itemsLayoutInfos.Clear();
+            int rowIndex = 0;
+            int columnIndex = 0;
+            _itemsLayoutInfos.Clear();
 
             // Заполняем строки
             while (true)
@@ -75,8 +75,14 @@ _itemsLayoutInfos.Clear();
 
                     itemIndex++;
 
-_itemsLayoutInfos.Add(new DragItemLayoutInfo(rowIndex, columnIndex, itemSize));
-columnIndex++;
+                    _itemsLayoutInfos.Add(new DragItemLayoutInfo()
+                    {
+                        RowIndex = rowIndex,
+                        ColumnIndex = columnIndex,
+                        ColumnWidth = itemSize.Width
+                    });
+
+                    columnIndex++;
                 }
                 // Если это как минимум второй элемент в строке - проверяем
                 else
@@ -94,8 +100,14 @@ columnIndex++;
 
                         itemIndex++;
 
-_itemsLayoutInfos.Add(new DragItemLayoutInfo(rowIndex, columnIndex, itemSize));
-columnIndex++;
+                        _itemsLayoutInfos.Add(new DragItemLayoutInfo()
+                        {
+                            RowIndex = rowIndex,
+                            ColumnIndex = columnIndex,
+                            ColumnWidth = itemSize.Width
+                        });
+
+                        columnIndex++;
                     }
                     // Новый элемент не помещается в строку
                     else
@@ -108,8 +120,8 @@ columnIndex++;
                             _rowHeights.Add(rowHeight);
                         }
 
-columnIndex = 0;
-rowIndex++;
+                        columnIndex = 0;
+                        rowIndex++;
                     }
                 }
             }
@@ -119,11 +131,7 @@ rowIndex++;
                 _rowHeights.Add(rowHeight);
             }
 
-System.Diagnostics.Debug.WriteLine($">>> WrapLayoutStrategy Calculate _rowHeights:{string.Join(',', _rowHeights)} ; ResultSize:{ResultSize}");
-foreach (DragItemLayoutInfo layoutInfo in _itemsLayoutInfos)
-{
-    System.Diagnostics.Debug.WriteLine($"\t{layoutInfo.RowIndex};{layoutInfo.ColumnIndex} {layoutInfo.Size}");
-}
+            UpdateRowHeightsInLayoutInfos();
         }
 
         public Rect GetPosition(int index)
@@ -227,48 +235,24 @@ foreach (DragItemLayoutInfo layoutInfo in _itemsLayoutInfos)
             return index;
         }
 
-        public double GetColumnWidthByElementIndex(int index)
-        {
-            int i = 0;
-            foreach (List<Size> row in _rows)
-            {
-                foreach (Size item in row)
-                {
-                    if (i == index)
-                    {
-                        return item.Width;
-                    }
-
-                    i++;
-                }
-            }
-
-            throw new IndexOutOfRangeException($"Element with index {index} not found.");
-        }
-
-        public double GetRowHeightByElementIndex(int index)
-        {
-            int i = 0;
-            int rowIndex = 0;
-            foreach (List<Size> row in _rows)
-            {
-                if (i + row.Count > index)
-                {
-                    System.Diagnostics.Debug.WriteLine($">>> WrapLayoutStrategy GetRowHeightByElementIndex index:{index} ; Height:{_rowHeights[rowIndex]}");
-
-                    return _rowHeights[rowIndex];
-                }
-
-                i += row.Count;
-                rowIndex++;
-            }
-
-            throw new IndexOutOfRangeException($"Element with index {index} not found.");
-        }
-
         public DragItemLayoutInfo GetLayoutInfo(int index)
         {
             return _itemsLayoutInfos[index];
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void UpdateRowHeightsInLayoutInfos()
+        {
+            for (int rowIndex = 0; rowIndex < _itemsLayoutInfos.Max(x => x.RowIndex); rowIndex++)
+            {
+                foreach (DragItemLayoutInfo layoutInfo in _itemsLayoutInfos.Where(x => x.RowIndex == rowIndex))
+                {
+                    layoutInfo.RowHeight = _rowHeights[rowIndex];
+                }
+            }
         }
 
         #endregion

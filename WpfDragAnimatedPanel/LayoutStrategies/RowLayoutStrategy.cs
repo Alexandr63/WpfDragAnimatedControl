@@ -21,7 +21,7 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
 
         public Size ResultSize => _row.Any() ? new Size(_row.Sum(item => item.Width), _height) : new Size(0, 0);
 
-        public void Calculate(Size availableSize, List<Size> measures, bool isDragging)
+        public void MeasureLayout(Size availableSize, List<Size> measures, bool isDragging)
         {
             _height = 0d;
             _row.Clear();

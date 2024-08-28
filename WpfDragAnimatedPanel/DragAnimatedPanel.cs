@@ -145,7 +145,7 @@ namespace WpfDragAnimatedPanel
                 childSizes.Add(child.DesiredSize);
             }
 
-            _layoutStrategy.Calculate(availableSize, childSizes, DraggedElement != null);
+            _layoutStrategy.MeasureLayout(availableSize, childSizes, DraggedElement != null);
             _calculatedSize = _layoutStrategy.ResultSize;
             
             return _calculatedSize;
@@ -298,7 +298,7 @@ namespace WpfDragAnimatedPanel
                 }
 
                 DragItemLayoutInfo currentLayoutInfo = _layoutStrategy.GetLayoutInfo(i);
-                horizontalPosition += currentLayoutInfo.Size.Width;
+                horizontalPosition += currentLayoutInfo.ColumnWidth;
 
                 if (i + 1 < Children.Count)
                 {
@@ -307,20 +307,9 @@ namespace WpfDragAnimatedPanel
                     {
                         rowIndex++;
                         horizontalPosition = 0;
-                        verticalPosition += _layoutStrategy.GetRowHeightByElementIndex(i + 1); // nextLayoutInfo.Size.Height;
+                        verticalPosition += currentLayoutInfo.RowHeight;
                     }
                 }
-
-
-                /*
-                horizontalPosition += _layoutStrategy.GetColumnWidthByElementIndex(i);
-
-                if (horizontalPosition + 1 > _calculatedSize.Width)
-                {
-                    horizontalPosition = 0;
-                    verticalPosition += _layoutStrategy.GetRowHeightByElementIndex(i);
-                }
-                */
             }
 
             // Старая версия с фиксированным размером 
@@ -389,7 +378,7 @@ namespace WpfDragAnimatedPanel
             if (_calculatedSize != calculatedSize)
             {
                 _calculatedSize = calculatedSize;
-                Measure(_calculatedSize);
+                MeasureLayout(_calculatedSize);
             }*/
         }
 

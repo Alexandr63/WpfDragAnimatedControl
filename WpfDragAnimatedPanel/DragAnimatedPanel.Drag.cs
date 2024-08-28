@@ -97,7 +97,9 @@ namespace WpfDragAnimatedPanel
                 }
                 else if (element.Width + _x + difX > _rectOnDrag.Location.X + _rectOnDrag.Width)
                 {
-                    _x = _rectOnDrag.Location.X + _rectOnDrag.Width - element.Width;
+                    // TODO разобраться зачем это надо было
+                    // _x = _rectOnDrag.Location.X + _rectOnDrag.Width - element.Width;
+                    _x += difX;
                 }
                 else if (mousePos.X > _rectOnDrag.Location.X && mousePos.X < _rectOnDrag.Location.X + _rectOnDrag.Width)
                 {
@@ -110,7 +112,9 @@ namespace WpfDragAnimatedPanel
                 }
                 else if (element.Height + _y + difY > _rectOnDrag.Location.Y + _rectOnDrag.Height)
                 {
-                    _y = _rectOnDrag.Location.Y + _rectOnDrag.Height - element.Height;
+                    // TODO разобраться зачем это надо было
+                    // _y = _rectOnDrag.Location.Y + _rectOnDrag.Height - element.Height;
+                    _y += difY;
                 }
                 else if (mousePos.Y > _rectOnDrag.Location.Y && mousePos.Y < _rectOnDrag.Location.Y + _rectOnDrag.Height)
                 {
@@ -207,6 +211,7 @@ namespace WpfDragAnimatedPanel
             }
 
             SetZIndex(child, 1000);
+            System.Diagnostics.Debug.WriteLine(">>> FillNewDraggedChild");
             AnimateTo(child, _x, _y, 0);
         }
 
