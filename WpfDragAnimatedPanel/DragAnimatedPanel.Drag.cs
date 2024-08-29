@@ -26,7 +26,6 @@ namespace WpfDragAnimatedPanel
         private int _lastMouseMoveTime;
         private double _x;
         private double _y;
-        private Rect _rectOnDrag;
 
         #endregion
 
@@ -76,7 +75,8 @@ namespace WpfDragAnimatedPanel
         private void OnDragOver(MouseEventArgs e)
         {
             const int MOUSE_TIME_DIF = 25;
-            const double MOUSE_DIF = 2d;
+            const double MOUSE_DIF = 10d;
+
             Point mousePos = Mouse.GetPosition(this);
             double difX = mousePos.X - _lastMousePosX;
             double difY = mousePos.Y - _lastMousePosY;
@@ -84,50 +84,17 @@ namespace WpfDragAnimatedPanel
             int timeDif = e.Timestamp - _lastMouseMoveTime;
             if ((Math.Abs(difX) > MOUSE_DIF || Math.Abs(difY) > MOUSE_DIF) && timeDif > MOUSE_TIME_DIF)
             {
-                #region this lines is for keepn draged item inside control bounds
-
                 DoScroll();
                 
                 int index = _layoutStrategy.GetIndex(mousePos);
-                IDragItemSize element = (IDragItemSize)((FrameworkElement)Children[index]).DataContext;
-                
-                if (_x + difX < _rectOnDrag.Location.X)
-                {
-                    _x = 0;
-                }
-                else if (element.Width + _x + difX > _rectOnDrag.Location.X + _rectOnDrag.Width)
-                {
-                    // TODO разобраться зачем это надо было
-                    // _x = _rectOnDrag.Location.X + _rectOnDrag.Width - element.Width;
-                    _x += difX;
-                }
-                else if (mousePos.X > _rectOnDrag.Location.X && mousePos.X < _rectOnDrag.Location.X + _rectOnDrag.Width)
-                {
-                    _x += difX;
-                }
+                _x += difX;
+                _y += difY;
 
-                if (_y + difY < _rectOnDrag.Location.Y)
-                {
-                    _y = 0;
-                }
-                else if (element.Height + _y + difY > _rectOnDrag.Location.Y + _rectOnDrag.Height)
-                {
-                    // TODO разобраться зачем это надо было
-                    // _y = _rectOnDrag.Location.Y + _rectOnDrag.Height - element.Height;
-                    _y += difY;
-                }
-                else if (mousePos.Y > _rectOnDrag.Location.Y && mousePos.Y < _rectOnDrag.Location.Y + _rectOnDrag.Height)
-                {
-                    _y += difY;
-                }
-
-                #endregion
-
-                AnimateTo(DraggedElement, _x, _y, 0);
                 _lastMousePosX = mousePos.X;
                 _lastMousePosY = mousePos.Y;
                 _lastMouseMoveTime = e.Timestamp;
-                SwapElement(_x + element.Width / 2, _y + element.Height / 2);
+                SwapElement(index);
+                AnimateTo(DraggedElement, _x, _y, 0);
             }
         }
 
@@ -141,8 +108,6 @@ namespace WpfDragAnimatedPanel
             }
 
             _draggedIndex = Children.IndexOf(DraggedElement);
-            _rectOnDrag = VisualTreeHelper.GetDescendantBounds(this);
-
             Point p = GetItemVisualPoint(DraggedElement);
             _x = p.X;
             _y = p.Y;
@@ -175,14 +140,13 @@ namespace WpfDragAnimatedPanel
             }
         }
 
-        private void SwapElement(double x, double y)
+        private void SwapElement(int index)
         {
-            int index = _layoutStrategy.GetIndex(new Point(x, y));
             if (index == _draggedIndex || index < 0)
             {
                 return;
             }
-
+            
             if (index >= Children.Count)
             {
                 index = Children.Count - 1;
@@ -191,6 +155,7 @@ namespace WpfDragAnimatedPanel
             int[] parameter = new int[] { _draggedIndex, index };
             if (SwapCommand != null && SwapCommand.CanExecute(parameter))
             {
+                System.Diagnostics.Debug.WriteLine($">>> SwapCommand.Execute {parameter[0]}->{parameter[1]}");
                 SwapCommand.Execute(parameter);
                 DraggedElement = Children[index]; //this is because after changing the collection the element is other			
                 FillNewDraggedChild(DraggedElement);
@@ -209,9 +174,8 @@ namespace WpfDragAnimatedPanel
                 child.RenderTransform = group;
                 group.Children.Add(new TranslateTransform());
             }
-
+            
             SetZIndex(child, 1000);
-            System.Diagnostics.Debug.WriteLine(">>> FillNewDraggedChild");
             AnimateTo(child, _x, _y, 0);
         }
 

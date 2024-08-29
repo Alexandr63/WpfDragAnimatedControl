@@ -49,24 +49,6 @@ namespace WpfDragAnimatedPanel
 
         #region Properties
 
-        /*
-        public double ItemWidth
-        {
-            get => (double)GetValue(ItemWidthProperty);
-            set => SetValue(ItemWidthProperty, value);
-        }
-
-        public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(nameof(ItemWidth), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(248d, AnimationMillisecondsDependencyPropertyChanged));
-
-        public double ItemHeight
-        {
-            get => (double)GetValue(ItemHeightProperty);
-            set => SetValue(ItemHeightProperty, value);
-        }
-
-        public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(nameof(ItemHeight), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(350d, AnimationMillisecondsDependencyPropertyChanged));
-        */
-
         public FillType FillType
         {
             get => (FillType)GetValue(FillTypeProperty);
@@ -100,54 +82,28 @@ namespace WpfDragAnimatedPanel
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            // Size itemContainerSize = new Size(ItemWidth, ItemHeight);
-
             foreach (UIElement child in Children)
             {
                 child.Measure(GetDragItemSize(child).GetSize());
             }
 
-            int count = Children.Count;
-            if (count == 0)
+            if (Children.Count == 0)
             {
                 _calculatedSize = new Size();
             }
-            //else if (FillType == FillType.Row)
-            //{
-            //    _calculatedSize = new Size(count * ItemWidth, ItemHeight);
-            //}
-            //else if (FillType == FillType.Column)
-            //{
-            //    _calculatedSize = new Size(ItemWidth, count * ItemHeight);
-            //}
-            //else
-            //{
-            //    if (availableSize.Width < ItemWidth)
-            //    {
-            //        _calculatedSize = new Size(ItemWidth, count * ItemHeight);
-            //    }
-            //    else
-            //    {
-            //        _columns = (int)Math.Truncate(availableSize.Width / ItemWidth);
-            //        _rows = count / _columns;
-            //        if (count % _columns != 0)
-            //        {
-            //            _rows++;
-            //        }
-
-            //        _calculatedSize = new Size(_columns * ItemWidth, _rows * ItemHeight);
-            //    }
-            //}
-
-            List<Size> childSizes = new List<Size>(Children.Count);
-            foreach (UIElement child in Children)
+            else
             {
-                childSizes.Add(child.DesiredSize);
+                List<Size> childSizes = new List<Size>(Children.Count);
+                foreach (UIElement child in Children)
+                {
+                    childSizes.Add(child.DesiredSize);
+                }
+                
+                _layoutStrategy.MeasureLayout(availableSize, childSizes, DraggedElement != null);
+
+                _calculatedSize = _layoutStrategy.ResultSize;
             }
 
-            _layoutStrategy.MeasureLayout(availableSize, childSizes, DraggedElement != null);
-            _calculatedSize = _layoutStrategy.ResultSize;
-            
             return _calculatedSize;
         }
 
@@ -208,16 +164,11 @@ namespace WpfDragAnimatedPanel
         {
             return (IDragItemSize)((FrameworkElement)element).DataContext;
         }
-
-        private IDragItemSize GetDragItemSize(FrameworkElement element)
-        {
-            return (IDragItemSize) element.DataContext;
-        }
-
+        
         private ICommand GetDefaultSwapCommand()
         {
             return new DelegateCommand<int[]>(
-                (indexes) =>
+                indexes =>
                 {
                     int from = indexes[0];
                     int to = indexes[1];
@@ -236,7 +187,7 @@ namespace WpfDragAnimatedPanel
                     list.Remove(dragged);
                     list.Insert(to, dragged);
                 },
-                (indexes => indexes.Length > 1)
+                indexes => indexes.Length > 1
             );
         }
 
@@ -252,28 +203,6 @@ namespace WpfDragAnimatedPanel
 
             return new Point(trans.X, trans.Y);
         }
-
-        //private int GetIndexFromPoint(double x, double y)
-        //{
-        //    int columnIndex = (int)Math.Truncate(x / ItemWidth);
-        //    int rowIndex = (int)Math.Truncate(y / ItemHeight);
-
-        //    int columns;
-        //    if (FillType == FillType.Row)
-        //    {
-        //        columns = Children.Count;
-        //    }
-        //    else if (FillType == FillType.Column)
-        //    {
-        //        columns = 1;
-        //    }
-        //    else
-        //    {
-        //        columns = _columns;
-        //    }
-
-        //    return columns * rowIndex + columnIndex;
-        //}
 
         private void AnimateAll()
         {
@@ -294,7 +223,7 @@ namespace WpfDragAnimatedPanel
                 if (child != DraggedElement)
                 {
                     AnimateTo(child, horizontalPosition, verticalPosition, _isNotFirstArrange ? AnimationMilliseconds : 0);
-                    System.Diagnostics.Debug.WriteLine($">>> AnimateAll() index:{i} {((FrameworkElement)child).DataContext.ToString()} to position {horizontalPosition};{verticalPosition}");
+                    // System.Diagnostics.Debug.WriteLine($">>> AnimateAll() index:{i} {((FrameworkElement)child).DataContext.ToString()} to position {horizontalPosition};{verticalPosition}");
                 }
 
                 DragItemLayoutInfo currentLayoutInfo = _layoutStrategy.GetLayoutInfo(i);
@@ -348,43 +277,9 @@ namespace WpfDragAnimatedPanel
                 DecelerationRatio = 0.7
             };
         }
-
-        private void MeasureControl()
-        {
-            // TODO подумать как реализовать
-
-            return;
-
-            /*
-            if (Children.Count == 0)
-            {
-                return;
-            }
-
-            Size calculatedSize;
-            if (FillType == FillType.Row)
-            {
-                calculatedSize = new Size(Children.Count * ItemWidth, ItemHeight);
-            }
-            else if (FillType == FillType.Column)
-            {
-                calculatedSize = new Size(ItemWidth, Children.Count * ItemHeight);
-            }
-            else
-            {
-                calculatedSize = new Size(_columns * ItemWidth, _columns * ItemHeight);
-            }
-
-            if (_calculatedSize != calculatedSize)
-            {
-                _calculatedSize = calculatedSize;
-                MeasureLayout(_calculatedSize);
-            }*/
-        }
-
+        
         private static void AnimationMillisecondsDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // ((DragAnimatedPanel)d).MeasureControl();
             ((DragAnimatedPanel)d).InvalidateMeasure();
         }
 

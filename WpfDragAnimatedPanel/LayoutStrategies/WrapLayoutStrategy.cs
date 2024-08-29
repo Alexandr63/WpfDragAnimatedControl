@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace WpfDragAnimatedPanel.LayoutStrategies
@@ -132,6 +131,9 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
             }
 
             UpdateRowHeightsInLayoutInfos();
+
+            
+            System.Diagnostics.Debug.WriteLine($">>> WrapLayoutStrategy {string.Join(',', _itemsLayoutInfos.Select(x=>x.ColumnWidth))}");
         }
 
         public Rect GetPosition(int index)
@@ -209,6 +211,74 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
             {
                 if (elementIndex < _rows[rowIndex].Count)
                 {
+                    // NOTE деление на 2 надо для более корректного отображения в ситуации, когда мы перетаскиваем элемент с индексом i из строки j, находящийся в конце строки на позицию i+1 в строке, находящийся в строке j+1.
+                    // При этом элемент, находящийся на позиции i+1, слишком широкий, и не может быть перенесен на предыдущую строку. В этом случаи возникает дергание элементов при перемещении мыши.
+                    x += _rows[rowIndex][elementIndex].Width / 2d;
+
+                    if (position.X < x)
+                    {
+                        break;
+                    }
+
+                    x += _rows[rowIndex][elementIndex].Width / 2d;
+
+                    if (position.X < x)
+                    {
+                        if (elementIndex + 1 < _rows[rowIndex].Count)
+                        {
+                            elementIndex++;
+                        }
+
+                        break;
+                    }
+                }
+                else
+                {
+                    elementIndex--;
+                    break;
+                }
+
+                elementIndex++;
+            }
+
+
+            int index = 0;
+            for (int i = 0; i < rowIndex; i++)
+            {
+                index += _rows[i].Count;
+            }
+            index += elementIndex;
+
+            return index;
+            /*
+            double y = 0d;
+            int rowIndex = 0;
+            while (true)
+            {
+                if (rowIndex < _rowHeights.Count)
+                {
+                    y += _rowHeights[rowIndex];
+
+                    if (position.Y < y)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    rowIndex--;
+                    break;
+                }
+
+                rowIndex++;
+            }
+
+            double x = 0d;
+            int elementIndex = 0;
+            while (true)
+            {
+                if (elementIndex < _rows[rowIndex].Count)
+                {
                     x += _rows[rowIndex][elementIndex].Width;
 
                     if (position.X < x)
@@ -233,6 +303,7 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
             index += elementIndex;
 
             return index;
+            */
         }
 
         public DragItemLayoutInfo GetLayoutInfo(int index)
