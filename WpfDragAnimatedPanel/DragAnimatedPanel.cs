@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -7,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using WpfDragAnimatedPanel.Commands;
 using WpfDragAnimatedPanel.LayoutStrategies;
 using WpfDragAnimatedPanel.Tools;
 
@@ -18,7 +16,6 @@ namespace WpfDragAnimatedPanel
         #region Private Fields
 
         private Size _calculatedSize;
-        private bool _isNotFirstArrange = false;
 
         private ILayoutStrategy _layoutStrategy;
 
@@ -33,7 +30,6 @@ namespace WpfDragAnimatedPanel
 
         public DragAnimatedPanel() : base()
         {
-            SwapCommand = GetDefaultSwapCommand();
             UpdateLayoutStrategy();
 
             AddHandler(Mouse.MouseMoveEvent, new MouseEventHandler(OnMouseMove), false);
@@ -88,15 +84,6 @@ namespace WpfDragAnimatedPanel
 
         public static readonly DependencyProperty AnimationMillisecondsProperty = DependencyProperty.Register(nameof(AnimationMilliseconds), typeof(int), typeof(DragAnimatedPanel), new UIPropertyMetadata(75, MeasureControlByDependencyPropertyChanged));
 
-        // TODO а зачем нам команда? Может проще от нее избавиться? 
-        public ICommand SwapCommand
-        {
-            get => (ICommand)GetValue(SwapCommandProperty);
-            set => SetValue(SwapCommandProperty, value);
-        }
-
-        public static readonly DependencyProperty SwapCommandProperty = DependencyProperty.Register(nameof(SwapCommand), typeof(ICommand), typeof(DragAnimatedPanel), new UIPropertyMetadata(null));
-        
         #endregion
 
         #region Override Methods
@@ -130,10 +117,10 @@ namespace WpfDragAnimatedPanel
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            // if is animated then arrange elements to 0,0, and then put them on its location using the transform
+            // Сначала помещаем все элементы в точку (0;0), после чего анимация поместит их в нужное место
             foreach (UIElement child in InternalChildren)
             {
-                // If this is the first time we've seen this child, add our transforms
+                // Ставим TransformGroup в RenderTransform для использования нашей анимации
                 if (!(child.RenderTransform is TransformGroup))
                 {
                     child.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -142,17 +129,12 @@ namespace WpfDragAnimatedPanel
                     group.Children.Add(new TranslateTransform());
                 }
 
-                //locate all children in 0,0 point //TODO: use infinity and then scale each element to items size
-                child.Arrange(new Rect(new Point(0, 0), GetDragItemSize(child).GetSize())); //when use transformations change to childs.DesireSize
+                // Помещаем все элементы в точку (0;0)
+                child.Arrange(new Rect(new Point(0, 0), GetDragItemSize(child).GetSize()));
             }
 
             AnimateAll();
-
-            if (!_isNotFirstArrange)
-            {
-                _isNotFirstArrange = true;
-            }
-
+            
             return _calculatedSize;
         }
 
@@ -188,32 +170,6 @@ namespace WpfDragAnimatedPanel
             return (IDragItemSize)((FrameworkElement)element).DataContext;
         }
         
-        private ICommand GetDefaultSwapCommand()
-        {
-            return new DelegateCommand<int[]>(
-                indexes =>
-                {
-                    int from = indexes[0];
-                    int to = indexes[1];
-
-                    ItemsControl parentItemsControl = ControlsHelper.GetParent(this, (x) => x is ItemsControl) as ItemsControl;
-                    
-                    // NOTE: если в ItemsSource не IList - необходимо написать свою реализацию команды 
-                    IList list = (IList)parentItemsControl.ItemsSource;
-
-                    if (from < 0 || to < 0 || from >= list.Count || to >= list.Count)
-                    {
-                        return;
-                    }
-
-                    object dragged = list[from];
-                    list.Remove(dragged);
-                    list.Insert(to, dragged);
-                },
-                indexes => indexes.Length > 1
-            );
-        }
-
         private UIElement GetChildThatHasMouseOver()
         {
             return ControlsHelper.GetParent(Mouse.DirectlyOver as DependencyObject, (ve) => Children.Contains(ve as UIElement)) as UIElement;
@@ -241,10 +197,11 @@ namespace WpfDragAnimatedPanel
             for (int i = 0; i < Children.Count; i++)
             {
                 UIElement child = Children[i];
-                //drag will locate dragged element
+
+                // Отображаем перемещение всех элементов кроме того, которые перемещает пользователь
                 if (child != DraggedElement)
                 {
-                    AnimateTo(child, horizontalPosition, verticalPosition, _isNotFirstArrange ? AnimationMilliseconds : 0);
+                    AnimateTo(child, horizontalPosition, verticalPosition, IsLoaded ? AnimationMilliseconds : 0);
                 }
 
                 DragItemLayoutInfo currentLayoutInfo = _layoutStrategy.GetLayoutInfo(i);
@@ -267,8 +224,6 @@ namespace WpfDragAnimatedPanel
             //int elementIndex = 0;
             //foreach (UIElement child in Children)
             //{
-
-
             //    elementIndex++;
             //    if (elementIndex < Children.Count)
             //    {

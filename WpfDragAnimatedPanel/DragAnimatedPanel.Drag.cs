@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -61,7 +62,8 @@ namespace WpfDragAnimatedPanel
                 Point mousePos = Mouse.GetPosition(this);
                 double difX = Math.Abs(mousePos.X - _lastMousePosX);
                 double difY = Math.Abs(mousePos.Y - _lastMousePosY);
-                // Защита от случайного перехода в режим перетаскивания при быстром прокликивании элементов. Смотрит, как долго была нажата кнопка мыши и насколько переместилась мышь.
+                // Защита от случайного перехода в режим перетаскивания при быстром прокликивании элементов.
+                // Смотрит, как долго была нажата кнопка мыши и насколько переместилась мышь.
                 if (clickDuration.Milliseconds > MIN_CLICK_TIME_MILLISECONDS && (difX > MIN_SHIFT_VALUE || difY > MIN_SHIFT_VALUE))
                 {
                     StartDrag(e);
@@ -140,26 +142,33 @@ namespace WpfDragAnimatedPanel
             }
         }
 
-        private void SwapElement(int index)
+        private void SwapElement(int targetIndex)
         {
-            if (index == _draggedIndex || index < 0)
+            if (targetIndex == _draggedIndex || targetIndex < 0)
             {
                 return;
             }
             
-            if (index >= Children.Count)
+            if (targetIndex >= Children.Count)
             {
-                index = Children.Count - 1;
+                targetIndex = Children.Count - 1;
             }
 
-            int[] parameter = new int[] { _draggedIndex, index };
-            if (SwapCommand != null && SwapCommand.CanExecute(parameter))
+            ItemsControl parentItemsControl = ControlsHelper.GetParent(this, (x) => x is ItemsControl) as ItemsControl;
+            IList list = (IList)parentItemsControl.ItemsSource; // NOTE: делаем заточенную под IList, если в ItemsSource будет что-то другое - надо будет переписать метод
+
+            if (_draggedIndex < 0 || targetIndex < 0 || _draggedIndex >= list.Count || targetIndex >= list.Count)
             {
-                SwapCommand.Execute(parameter);
-                DraggedElement = Children[index]; // this is because after changing the collection the element is other			
-                FillNewDraggedChild(DraggedElement);
-                _draggedIndex = index;
+                return;
             }
+
+            object dragged = list[_draggedIndex];
+            list.Remove(dragged);
+            list.Insert(targetIndex, dragged);
+
+            DraggedElement = Children[targetIndex]; // Получаем новый элемент UI после изменения коллекции
+            FillNewDraggedChild(DraggedElement);
+            _draggedIndex = targetIndex;
 
             InvalidateArrange();
         }
@@ -189,7 +198,6 @@ namespace WpfDragAnimatedPanel
             {
                 DraggedElement = null;
 
-                System.Diagnostics.Debug.WriteLine(">>> Finish Drag");
                 InvalidateMeasure();
             }
         }
