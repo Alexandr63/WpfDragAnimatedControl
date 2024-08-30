@@ -41,18 +41,12 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
                 columnsCount = GetColumnCount(availableSize, measures);
             }
 
-            for (int i = 0; i < columnsCount; i++)
-            {
-                _columnWidths.Add(0d);
-            }
-
+            InitList(_columnWidths, columnsCount);
+            
             if (!isDragging)
             {
                 int rowsCount = Convert.ToInt32(Math.Ceiling(measures.Count / (double) columnsCount));
-                for (int i = 0; i < rowsCount; i++)
-                {
-                    _rowHeights.Add(0d);
-                }
+                InitList(_rowHeights, rowsCount);
             }
 
             for (int index = 0; index < measures.Count; index++)
@@ -162,6 +156,14 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
         #endregion
 
         #region Private Methods
+
+        private void InitList(List<double> list, int count, double defaultValue = 0d)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                list.Add(defaultValue);
+            }
+        }
 
         private int GetColumnCount(Size availableSize, List<Size> measures)
         {
