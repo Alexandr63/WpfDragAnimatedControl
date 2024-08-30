@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -80,19 +79,15 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
             return index;
         }
 
-        public double GetColumnWidthByElementIndex(int index)
-        {
-            return _width;
-        }
-
-        public double GetRowHeightByElementIndex(int index)
-        {
-            return _column[index].Height;
-        }
-        
         public DragItemLayoutInfo GetLayoutInfo(int index)
         {
-            throw new NotImplementedException();
+            return new DragItemLayoutInfo()
+            {
+                ColumnIndex = 0,
+                RowIndex = index,
+                ColumnWidth = _width,
+                RowHeight = _column[index].Height
+            };
         }
 
         #endregion

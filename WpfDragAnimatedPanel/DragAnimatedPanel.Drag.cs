@@ -54,13 +54,14 @@ namespace WpfDragAnimatedPanel
         {
             if (e.LeftButton == MouseButtonState.Pressed && DraggedElement == null && !IsMouseCaptured)
             {
-                // Protection against accidental transition to drag-and-drop mode when quickly clicking on elements. Looks at how long the mouse button was pressed and how much mouse moved.
                 const double MIN_CLICK_TIME_MILLISECONDS = 40d;
                 const int MIN_SHIFT_VALUE = 10;
+
                 TimeSpan clickDuration = DateTime.Now - _mouseDownTime;
                 Point mousePos = Mouse.GetPosition(this);
                 double difX = Math.Abs(mousePos.X - _lastMousePosX);
                 double difY = Math.Abs(mousePos.Y - _lastMousePosY);
+                // Защита от случайного перехода в режим перетаскивания при быстром прокликивании элементов. Смотрит, как долго была нажата кнопка мыши и насколько переместилась мышь.
                 if (clickDuration.Milliseconds > MIN_CLICK_TIME_MILLISECONDS && (difX > MIN_SHIFT_VALUE || difY > MIN_SHIFT_VALUE))
                 {
                     StartDrag(e);
@@ -80,7 +81,6 @@ namespace WpfDragAnimatedPanel
             Point mousePos = Mouse.GetPosition(this);
             double difX = mousePos.X - _lastMousePosX;
             double difY = mousePos.Y - _lastMousePosY;
-
             int timeDif = e.Timestamp - _lastMouseMoveTime;
             if ((Math.Abs(difX) > MOUSE_DIF || Math.Abs(difY) > MOUSE_DIF) && timeDif > MOUSE_TIME_DIF)
             {
@@ -155,9 +155,8 @@ namespace WpfDragAnimatedPanel
             int[] parameter = new int[] { _draggedIndex, index };
             if (SwapCommand != null && SwapCommand.CanExecute(parameter))
             {
-                System.Diagnostics.Debug.WriteLine($">>> SwapCommand.Execute {parameter[0]}->{parameter[1]}");
                 SwapCommand.Execute(parameter);
-                DraggedElement = Children[index]; //this is because after changing the collection the element is other			
+                DraggedElement = Children[index]; // this is because after changing the collection the element is other			
                 FillNewDraggedChild(DraggedElement);
                 _draggedIndex = index;
             }

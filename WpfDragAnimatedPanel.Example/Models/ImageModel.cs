@@ -53,7 +53,7 @@ namespace WpfDragAnimatedPanel.Example.Models
 
         public override string ToString()
         {
-            return $"{Tag} Size:{GetSize()}";
+            return $"{Tag}\tSize: {GetSize()}";
         }
     }
 }

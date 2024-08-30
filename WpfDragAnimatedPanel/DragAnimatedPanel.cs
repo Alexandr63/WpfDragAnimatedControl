@@ -2,14 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Xml.Linq;
 using WpfDragAnimatedPanel.Commands;
 using WpfDragAnimatedPanel.LayoutStrategies;
 using WpfDragAnimatedPanel.Tools;
@@ -63,11 +60,9 @@ namespace WpfDragAnimatedPanel
             set => SetValue(AnimationMillisecondsProperty, value);
         }
 
-        /// <summary>
-        /// Using a DependencyProperty as the backing store for AnimationMilliseconds.  This enables animation, styling, binding, etc...
-        /// </summary>
         public static readonly DependencyProperty AnimationMillisecondsProperty = DependencyProperty.Register(nameof(AnimationMilliseconds), typeof(int), typeof(DragAnimatedPanel), new UIPropertyMetadata(75, AnimationMillisecondsDependencyPropertyChanged));
 
+        // TODO а зачем нам команда? Может проще от нее избавиться? 
         public ICommand SwapCommand
         {
             get => (ICommand)GetValue(SwapCommandProperty);
@@ -152,9 +147,11 @@ namespace WpfDragAnimatedPanel
                 case FillType.Wrap:
                     _layoutStrategy = new WrapLayoutStrategy();
                     break;
+                case FillType.Table:
+                    _layoutStrategy = new TableLayoutStrategy();
+                    break;
                 default:
                     throw new ArgumentException($"Unknown FillType {FillType}");
-                    _layoutStrategy = new TableLayoutStrategy(); // TODO сделать вариант с Table
             }
 
             InvalidateMeasure();
@@ -214,7 +211,6 @@ namespace WpfDragAnimatedPanel
             double horizontalPosition = 0;
             double verticalPosition = 0;
 
-            System.Diagnostics.Debug.WriteLine($">>> AnimateAll() _calculatedSize:{_calculatedSize}");
             int rowIndex = 0;
             for (int i = 0; i < Children.Count; i++)
             {
@@ -223,7 +219,6 @@ namespace WpfDragAnimatedPanel
                 if (child != DraggedElement)
                 {
                     AnimateTo(child, horizontalPosition, verticalPosition, _isNotFirstArrange ? AnimationMilliseconds : 0);
-                    // System.Diagnostics.Debug.WriteLine($">>> AnimateAll() index:{i} {((FrameworkElement)child).DataContext.ToString()} to position {horizontalPosition};{verticalPosition}");
                 }
 
                 DragItemLayoutInfo currentLayoutInfo = _layoutStrategy.GetLayoutInfo(i);
@@ -241,6 +236,7 @@ namespace WpfDragAnimatedPanel
                 }
             }
 
+            // TODO добавить вариант с фиксированным размером
             // Старая версия с фиксированным размером 
             //int elementIndex = 0;
             //foreach (UIElement child in Children)

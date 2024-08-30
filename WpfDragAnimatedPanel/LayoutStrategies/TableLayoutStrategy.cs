@@ -94,45 +94,19 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
             return result;
         }
 
-        public double GetColumnWidthByElementIndex(int index)
-        {
-            int i = 0;
-            for (int rowIndex = 0; rowIndex < _rowHeights.Count; rowIndex++)
-            {
-                if (i + _colWidths.Length < index)
-                {
-                    i += _colWidths.Length;
-                }
-                else
-                {
-                    return _colWidths[i + _colWidths.Length - index - 1];
-                }
-            }
-            
-            throw new IndexOutOfRangeException($"Element with index {index} not found.");
-        }
-
-        public double GetRowHeightByElementIndex(int index)
-        {
-            int i = 0;
-            foreach (double rowHeight in _rowHeights)
-            {
-                if (i + _colWidths.Length < index)
-                {
-                    i += _colWidths.Length;
-                }
-                else
-                {
-                    return rowHeight;
-                }
-            }
-
-            throw new IndexOutOfRangeException($"Element with index {index} not found.");
-        }
-
         public DragItemLayoutInfo GetLayoutInfo(int index)
         {
-            throw new NotImplementedException();
+            // Переделать как в Wrap
+            int columnIndex = index % _columnCount;
+            int rowIndex = index / _columnCount;
+
+            return new DragItemLayoutInfo()
+            {
+                ColumnIndex = columnIndex,
+                RowIndex = rowIndex,
+                ColumnWidth = _colWidths[columnIndex],
+                RowHeight = _rowHeights[rowIndex]
+            };
         }
 
         #endregion

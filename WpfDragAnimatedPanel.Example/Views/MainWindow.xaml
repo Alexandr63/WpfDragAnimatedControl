@@ -30,6 +30,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
  
         <StackPanel Grid.Row="0" 
@@ -56,14 +57,21 @@
                 Grid.Column="1"
                 Margin="5"
                 Width="100"
-                Click="TestButtonClickEventHandler">Test</Button>
+                Click="AddItemsButtonClickEventHandler">Add items</Button>
+
+
+        <Button Grid.Row="0"
+                Grid.Column="2"
+                Margin="5"
+                Width="100"
+                Click="DataToOutputButtonClickEventHandler">Data to output</Button>
 
         <ListBox Grid.Row="2"
                  Grid.Column="0"
-                 Grid.ColumnSpan="2"
+                 Grid.ColumnSpan="3"
                  x:Name="TestListBox"
                  Margin="5"
-                 ItemsSource="{Binding Images}"
+                 ItemsSource="{Binding Images, Mode=TwoWay}"
                  Background="WhiteSmoke"
                  ScrollViewer.HorizontalScrollBarVisibility="{Binding FillType, Converter={StaticResource HorizontalScrollBarVisibilityConverter}}"
                  PreviewMouseWheel="TestListBoxPreviewMouseWheelEventHandler"
@@ -73,7 +81,6 @@
                     <wpfDragAnimatedPanel:DragAnimatedPanel FillType="{Binding FillType}"
                                                             HorizontalAlignment="Left"
                                                             Background="DimGray"/>
-                                                            <!--ItemWidth="248" ItemHeight="350"-->
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>

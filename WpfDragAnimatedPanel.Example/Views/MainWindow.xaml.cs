@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,7 +17,7 @@ namespace WpfDragAnimatedPanel.Example.Views
         #region Private Fields
 
         private readonly MainWindowViewModel _model = new MainWindowViewModel();
-
+        
         #endregion
 
         #region Ctor
@@ -35,6 +33,16 @@ namespace WpfDragAnimatedPanel.Example.Views
 
         #region Private Methods
 
+        private void Resize(double multiplier)
+        {
+            _model.Multiplier *= multiplier;
+            foreach (ImageModel imageModel in _model.Images)
+            {
+                imageModel.Height *= multiplier;
+                imageModel.Width *= multiplier;
+            }
+        }
+
         private void UpdateDragAnimatedPanelView(DragAnimatedPanel dragPanel, Size panelNewSize, bool? wheelUp)
         {
             if (!IsLoaded || !IsInitialized || TestListBox.ItemsSource == null)
@@ -42,9 +50,7 @@ namespace WpfDragAnimatedPanel.Example.Views
                 return;
             }
 
-            System.Diagnostics.Debug.WriteLine($">>> UpdateDragAnimatedPanelView panelNewSize:{panelNewSize}");
-
-            const double MIN_SIZE = 50d;
+            const double MIN_SIZE = 100d;
             const double MAX_SIZE = 1000d;
 
             List<IDragItemSize> items = new List<IDragItemSize>();
@@ -62,19 +68,13 @@ namespace WpfDragAnimatedPanel.Example.Views
                 {
                     case FillType.Row:
                         multiplier = (TestListBox.ActualHeight - SCROLL_SIZE) / items.Max(x => x.Height);
-                        foreach (IDragItemSize item in items)
-                        {
-                            item.Height *= multiplier;
-                            item.Width *= multiplier;
-                        }
+                        Resize(multiplier);
+                        dragPanel.Measure(panelNewSize);
                         return;
                     case FillType.Column:
                         multiplier = (TestListBox.ActualWidth - SCROLL_SIZE) / items.Max(x => x.Width);
-                        foreach (IDragItemSize item in items)
-                        {
-                            item.Height *= multiplier;
-                            item.Width *= multiplier;
-                        }
+                        Resize(multiplier);
+                        dragPanel.Measure(panelNewSize);
                         return;
                 }
             }
@@ -88,94 +88,20 @@ namespace WpfDragAnimatedPanel.Example.Views
                     return;
                 }
 
-                foreach (IDragItemSize item in items)
+                if (wheelUp.Value)
                 {
-                    if (wheelUp.Value)
-                    {
-                        const double MULTIPLIER_UP = 1.1d;
-                        item.Height *= MULTIPLIER_UP;
-                        item.Width *= MULTIPLIER_UP;
-                    }
-                    else
-                    {
-                        const double MULTIPLIER_DOWN = 0.9d;
-                        item.Height *= MULTIPLIER_DOWN;
-                        item.Width *= MULTIPLIER_DOWN;
-                    }
+                    const double MULTIPLIER_UP = 1.1d;
+                    Resize(MULTIPLIER_UP);
                 }
+                else
+                {
+                    const double MULTIPLIER_DOWN = 0.9d;
+                    Resize(MULTIPLIER_DOWN);
+                }
+
+                dragPanel.Measure(panelNewSize);
             }
-
-            dragPanel.Measure(panelNewSize);
-
-            // dragPanel.InvalidateMeasure();
         }
-
-        //private void UpdateDragAnimatedPanelView(DragAnimatedPanel dragAnimatedPanel, Size panelNewSize, bool? wheelUp)
-        //{
-        //    if (!IsLoaded || !IsInitialized)
-        //    {
-        //        return;
-        //    }
-
-        //    const int SCROLL_SIZE = 25;
-        //    const double MIN_SIZE = 50d;
-        //    const double MAX_SIZE = 1000d;
-
-        //    double oldHeight = dragAnimatedPanel.ItemHeight;
-        //    double oldWidth = dragAnimatedPanel.ItemWidth;
-
-        //    double height;
-        //    double width;
-
-        //    if (!_model.AutoSizeMode || dragAnimatedPanel.FillType == FillType.Wrap)
-        //    {
-        //        if (!wheelUp.HasValue ||
-        //            (wheelUp.Value && (dragAnimatedPanel.ItemHeight > MAX_SIZE || dragAnimatedPanel.ItemWidth > MAX_SIZE)) ||
-        //            (!wheelUp.Value && (dragAnimatedPanel.ItemHeight < MIN_SIZE || dragAnimatedPanel.ItemWidth < MIN_SIZE))
-        //           )
-        //        {
-        //            // protection against too large/ small item size
-        //            return;
-        //        }
-
-        //        if (wheelUp.Value)
-        //        {
-        //            const double MULTIPLIER_UP = 1.1;
-        //            height = dragAnimatedPanel.ItemHeight * MULTIPLIER_UP;
-        //            width = dragAnimatedPanel.ItemWidth * MULTIPLIER_UP;
-        //        }
-        //        else
-        //        {
-        //            const double MULTIPLIER_DOWN = 0.9;
-        //            height = dragAnimatedPanel.ItemHeight * MULTIPLIER_DOWN;
-        //            width = dragAnimatedPanel.ItemWidth * MULTIPLIER_DOWN;
-        //        }
-
-        //        dragAnimatedPanel.ItemWidth = width;
-        //        dragAnimatedPanel.ItemHeight = height;
-        //    }
-        //    else if (_model.AutoSizeMode)
-        //    {
-        //        switch (dragAnimatedPanel.FillType)
-        //        {
-        //            case FillType.Row:
-        //                height = panelNewSize.Height - SCROLL_SIZE; // consider the scroll size
-        //                width = oldWidth * height / oldHeight;
-
-        //                break;
-        //            case FillType.Column:
-        //                width = panelNewSize.Width - SCROLL_SIZE; // consider the scroll size
-        //                height = oldHeight * width / oldWidth;
-
-        //                break;
-        //            default:
-        //                return;
-        //        }
-
-        //        dragAnimatedPanel.ItemWidth = width;
-        //        dragAnimatedPanel.ItemHeight = height;
-        //    }
-        //}
 
         #endregion
 
@@ -188,13 +114,10 @@ namespace WpfDragAnimatedPanel.Example.Views
                 return;
             }
 
-            if (_model.FillType == FillType.Wrap || !_model.AutoSizeMode)
-            {
-                DragAnimatedPanel dragAnimatedPanel = ControlsHelper.GetDragAnimatedPanel((ListBox)sender);
-                UpdateDragAnimatedPanelView(dragAnimatedPanel, dragAnimatedPanel.RenderSize, e.Delta > 0);
+            DragAnimatedPanel dragAnimatedPanel = ControlsHelper.GetDragAnimatedPanel((ListBox)sender);
+            UpdateDragAnimatedPanelView(dragAnimatedPanel, dragAnimatedPanel.RenderSize, e.Delta > 0);
 
-                e.Handled = true;
-            }
+            e.Handled = true;
         }
 
         private void TestListBoxSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
@@ -222,13 +145,18 @@ namespace WpfDragAnimatedPanel.Example.Views
         
         #endregion
 
-        private void TestButtonClickEventHandler(object sender, RoutedEventArgs e)
+        private void DataToOutputButtonClickEventHandler(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine($">>> Test list:");
             foreach (ImageModel imageModel in _model.Images)
             {
-                System.Diagnostics.Debug.WriteLine($"\t{imageModel.Tag}");
+                System.Diagnostics.Debug.WriteLine($"\t{imageModel}");
             }
+        }
+
+        private void AddItemsButtonClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            _model.AddImages();
         }
     }
 }

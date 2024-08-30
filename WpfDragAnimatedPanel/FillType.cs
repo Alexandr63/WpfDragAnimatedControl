@@ -4,6 +4,7 @@
     {
         Wrap,
         Row,
-        Column
+        Column,
+        Table
     }
 }

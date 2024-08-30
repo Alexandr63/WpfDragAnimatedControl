@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace WpfDragAnimatedPanel
+﻿namespace WpfDragAnimatedPanel
 {
     public class DragItemLayoutInfo
     {
