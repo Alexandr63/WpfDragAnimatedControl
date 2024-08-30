@@ -103,10 +103,11 @@ namespace WpfDragAnimatedPanel.Example.Views
             }
         }
 
+
         #endregion
 
         #region Event Handlers
-        
+
         private void TestListBoxPreviewMouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
             if (Keyboard.Modifiers != ModifierKeys.Control)

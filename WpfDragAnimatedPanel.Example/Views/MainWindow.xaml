@@ -80,12 +80,17 @@
                 <ItemsPanelTemplate>
                     <wpfDragAnimatedPanel:DragAnimatedPanel FillType="{Binding FillType}"
                                                             HorizontalAlignment="Left"
-                                                            Background="DimGray"/>
+                                                            Background="DarkGray"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Margin="10" Padding="20" Width="{Binding Width}" Height="{Binding Height}" Background="LightBlue" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Border Margin="10"
+                            Width="{Binding Width}" 
+                            Height="{Binding Height}"
+                            Background="LightBlue" 
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
                         <Image Source="{Binding ImageSource}" />
                     </Border>
                     

@@ -46,6 +46,32 @@ namespace WpfDragAnimatedPanel
 
         #region Properties
 
+        public double FixedItemWidth
+        {
+            get => (double)GetValue(FixedItemWidthProperty);
+            set => SetValue(FixedItemWidthProperty, value);
+        }
+
+        public static readonly DependencyProperty FixedItemWidthProperty = DependencyProperty.Register(nameof(FixedItemWidth), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(248d, MeasureControlByDependencyPropertyChanged));
+
+        public double FixedItemHeight
+        {
+            get => (double)GetValue(FixedItemHeightProperty);
+            set => SetValue(FixedItemHeightProperty, value);
+        }
+
+        public static readonly DependencyProperty FixedItemHeightProperty = DependencyProperty.Register(nameof(FixedItemHeight), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(350d, MeasureControlByDependencyPropertyChanged));
+
+
+        public bool IsFixedItemSize
+        {
+            get => (bool)GetValue(IsFixedItemSizeProperty);
+            set => SetValue(IsFixedItemSizeProperty, value);
+        }
+
+        public static readonly DependencyProperty IsFixedItemSizeProperty = DependencyProperty.Register(nameof(IsFixedItemSize), typeof(bool), typeof(DragAnimatedPanel), new UIPropertyMetadata(false, MeasureControlByDependencyPropertyChanged));
+
+
         public FillType FillType
         {
             get => (FillType)GetValue(FillTypeProperty);
@@ -60,7 +86,7 @@ namespace WpfDragAnimatedPanel
             set => SetValue(AnimationMillisecondsProperty, value);
         }
 
-        public static readonly DependencyProperty AnimationMillisecondsProperty = DependencyProperty.Register(nameof(AnimationMilliseconds), typeof(int), typeof(DragAnimatedPanel), new UIPropertyMetadata(75, AnimationMillisecondsDependencyPropertyChanged));
+        public static readonly DependencyProperty AnimationMillisecondsProperty = DependencyProperty.Register(nameof(AnimationMilliseconds), typeof(int), typeof(DragAnimatedPanel), new UIPropertyMetadata(75, MeasureControlByDependencyPropertyChanged));
 
         // TODO а зачем нам команда? Может проще от нее избавиться? 
         public ICommand SwapCommand
@@ -274,7 +300,7 @@ namespace WpfDragAnimatedPanel
             };
         }
         
-        private static void AnimationMillisecondsDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void MeasureControlByDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((DragAnimatedPanel)d).InvalidateMeasure();
         }

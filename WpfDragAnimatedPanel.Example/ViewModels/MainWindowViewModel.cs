@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Documents;
 using WpfDragAnimatedPanel.Example.Helpers;
 using WpfDragAnimatedPanel.Example.Models;
 using WpfDragAnimatedPanel.Tools;
@@ -98,6 +97,7 @@ namespace WpfDragAnimatedPanel.Example.ViewModels
                 new ImageModel {ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/7a.jpg"), Tag = "7a"},
                 new ImageModel {ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/8a.jpg"), Tag = "8a"},
                 new ImageModel {ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/9.jpg"), Tag = "9"},
+
                 new ImageModel {ImageSource = BitmapImageHelper.FileToBitmapImage("Images/0.jpg"), Tag = "00"},
                 new ImageModel {ImageSource = BitmapImageHelper.FileToBitmapImage("Images/1.jpg"), Tag = "01"},
                 new ImageModel {ImageSource = BitmapImageHelper.FileToBitmapImage("Images/2.jpg"), Tag = "02"},

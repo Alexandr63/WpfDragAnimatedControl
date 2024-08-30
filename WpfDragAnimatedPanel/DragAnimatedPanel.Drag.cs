@@ -189,6 +189,7 @@ namespace WpfDragAnimatedPanel
             {
                 DraggedElement = null;
 
+                System.Diagnostics.Debug.WriteLine(">>> Finish Drag");
                 InvalidateMeasure();
             }
         }

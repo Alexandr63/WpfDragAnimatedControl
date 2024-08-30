@@ -13,7 +13,6 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
 
         private readonly List<List<Size>> _rows = new List<List<Size>>();
         private readonly List<double> _rowHeights = new List<double>();
-
         private readonly List<DragItemLayoutInfo> _itemsLayoutInfos = new List<DragItemLayoutInfo>();
 
         #endregion
@@ -28,8 +27,8 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
             {
                 _rowHeights.Clear();
             }
-
             _rows.Clear();
+            _itemsLayoutInfos.Clear();
 
             if (!measures.Any())
             {
@@ -45,8 +44,7 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
 
             int rowIndex = 0;
             int columnIndex = 0;
-            _itemsLayoutInfos.Clear();
-
+            
             // Заполняем строки
             while (true)
             {
@@ -100,7 +98,8 @@ namespace WpfDragAnimatedPanel.LayoutStrategies
                         {
                             RowIndex = rowIndex,
                             ColumnIndex = columnIndex,
-                            ColumnWidth = itemSize.Width
+                            ColumnWidth = itemSize.Width,
+                            RowHeight = rowHeight
                         });
 
                         columnIndex++;
