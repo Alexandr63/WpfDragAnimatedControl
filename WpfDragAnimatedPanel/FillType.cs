@@ -1,4 +1,4 @@
-﻿namespace WpfDragAnimatedPanel
+﻿namespace WpfDragAnimatedControl
 {
     public enum FillType
     {

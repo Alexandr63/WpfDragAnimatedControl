@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace WpfDragAnimatedPanel.Example.Converters
+namespace WpfDragAnimatedControl.Example.Converters
 {
     public sealed class HorizontalScrollBarVisibilityConverter : IValueConverter
     {

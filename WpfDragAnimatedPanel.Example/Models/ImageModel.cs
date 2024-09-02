@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace WpfDragAnimatedPanel.Example.Models
+namespace WpfDragAnimatedControl.Example.Models
 {
     public class ImageModel : NotifyPropertyChangedObject, IDragItemSize
     {

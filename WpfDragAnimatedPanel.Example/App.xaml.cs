@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace WpfDragAnimatedPanel.Example
+namespace WpfDragAnimatedControl.Example
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 
-namespace WpfDragAnimatedPanel.LayoutStrategies
+namespace WpfDragAnimatedControl.LayoutStrategies
 {
     /// <summary>
     /// Стратегия отображения дочерних элементов на в столбик.

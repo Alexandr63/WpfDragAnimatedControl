@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace WpfDragAnimatedPanel.Tools
+namespace WpfDragAnimatedControl.Tools
 {
     public static class ControlsHelper
     {

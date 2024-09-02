@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WpfDragAnimatedPanel\WpfDragAnimatedPanel.csproj" />
+    <ProjectReference Include="..\WpfDragAnimatedPanel\WpfDragAnimatedControl.csproj" />
   </ItemGroup>
 
   <ItemGroup>

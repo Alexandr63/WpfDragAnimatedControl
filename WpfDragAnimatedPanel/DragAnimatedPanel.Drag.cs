@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using WpfDragAnimatedPanel.Tools;
+using WpfDragAnimatedControl.Tools;
 
-namespace WpfDragAnimatedPanel
+namespace WpfDragAnimatedControl
 {
     public partial class DragAnimatedPanel
     {

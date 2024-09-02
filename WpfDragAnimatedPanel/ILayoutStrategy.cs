@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace WpfDragAnimatedPanel
+namespace WpfDragAnimatedControl
 {
     /// <summary>
     /// Стратегия отображения дочерних элементов на панели.

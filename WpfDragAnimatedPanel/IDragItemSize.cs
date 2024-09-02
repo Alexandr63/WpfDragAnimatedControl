@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace WpfDragAnimatedPanel
+namespace WpfDragAnimatedControl
 {
     public interface IDragItemSize 
     {

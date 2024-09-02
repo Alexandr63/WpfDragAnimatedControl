@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
-namespace WpfDragAnimatedPanel.LayoutStrategies
+namespace WpfDragAnimatedControl.LayoutStrategies
 {
     /// <summary>
     /// Стратегия отображения дочерних элементов в виде таблицы с построчным заполнением с различной шириной строк.

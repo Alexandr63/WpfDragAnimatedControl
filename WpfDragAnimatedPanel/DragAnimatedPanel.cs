@@ -6,10 +6,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using WpfDragAnimatedPanel.LayoutStrategies;
-using WpfDragAnimatedPanel.Tools;
+using WpfDragAnimatedControl.LayoutStrategies;
+using WpfDragAnimatedControl.Tools;
 
-namespace WpfDragAnimatedPanel
+namespace WpfDragAnimatedControl
 {
     public sealed partial class DragAnimatedPanel : Panel
     {

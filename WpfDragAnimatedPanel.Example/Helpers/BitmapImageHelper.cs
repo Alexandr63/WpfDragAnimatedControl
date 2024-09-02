@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Windows.Media.Imaging;
 
-namespace WpfDragAnimatedPanel.Example.Helpers
+namespace WpfDragAnimatedControl.Example.Helpers
 {
     public static class BitmapImageHelper
     {

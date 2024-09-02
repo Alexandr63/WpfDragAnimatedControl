@@ -3,11 +3,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using WpfDragAnimatedPanel.Example.Models;
-using WpfDragAnimatedPanel.Example.ViewModels;
-using WpfDragAnimatedPanel.Tools;
+using WpfDragAnimatedControl.Example.Models;
+using WpfDragAnimatedControl.Example.ViewModels;
+using WpfDragAnimatedControl.Tools;
 
-namespace WpfDragAnimatedPanel.Example.Views
+namespace WpfDragAnimatedControl.Example.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

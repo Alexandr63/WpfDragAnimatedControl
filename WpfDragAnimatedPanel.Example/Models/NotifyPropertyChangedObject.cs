@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WpfDragAnimatedPanel.Example.Models
+namespace WpfDragAnimatedControl.Example.Models
 {
     public abstract class NotifyPropertyChangedObject : INotifyPropertyChanged
     {

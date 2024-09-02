@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace WpfDragAnimatedPanel.Tools
+namespace WpfDragAnimatedControl.Tools
 {
     public sealed class ExtendedObservableCollection<T> : ObservableCollection<T>
         where T : class, INotifyPropertyChanged

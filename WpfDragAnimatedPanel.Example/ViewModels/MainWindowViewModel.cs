@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WpfDragAnimatedPanel.Example.Helpers;
-using WpfDragAnimatedPanel.Example.Models;
-using WpfDragAnimatedPanel.Tools;
+using WpfDragAnimatedControl.Example.Helpers;
+using WpfDragAnimatedControl.Example.Models;
+using WpfDragAnimatedControl.Tools;
 
-namespace WpfDragAnimatedPanel.Example.ViewModels
+namespace WpfDragAnimatedControl.Example.ViewModels
 {
     public class MainWindowViewModel : NotifyPropertyChangedObject
     {
