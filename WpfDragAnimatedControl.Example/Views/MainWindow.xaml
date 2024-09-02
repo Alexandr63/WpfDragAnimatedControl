@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:wpfDragAnimatedPanel="clr-namespace:WpfDragAnimatedPanel;assembly=WpfDragAnimatedPanel"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:converters="clr-namespace:WpfDragAnimatedControl.Example.Converters"
+        xmlns:wpfDragAnimatedControl="clr-namespace:WpfDragAnimatedControl;assembly=WpfDragAnimatedControl"
         Width="800"
         Height="600"
         Background="DimGray"
@@ -16,7 +16,7 @@
                             MethodName="GetValues" 
                             ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="wpfDragAnimatedPanel:FillType"/>
+                <x:Type TypeName="wpfDragAnimatedControl:FillType"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
@@ -77,9 +77,9 @@
                  SizeChanged="TestListBoxSizeChangedEventHandler">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <wpfDragAnimatedPanel:DragAnimatedPanel FillType="{Binding FillType}"
-                                                            HorizontalAlignment="Left"
-                                                            Background="DarkGray"/>
+                    <wpfDragAnimatedControl:DragAnimatedPanel FillType="{Binding FillType}"
+                                                              HorizontalAlignment="Left"
+                                                              Background="DarkGray"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>

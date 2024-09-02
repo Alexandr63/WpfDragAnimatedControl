@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfDragAnimatedControl", "WpfDragAnimatedPanel\WpfDragAnimatedControl.csproj", "{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfDragAnimatedControl", "WpfDragAnimatedControl\WpfDragAnimatedControl.csproj", "{7F888F14-7884-4B8A-AEBC-DD9EB9222AD9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfDragAnimatedControl.Example", "WpfDragAnimatedPanel.Example\WpfDragAnimatedControl.Example.csproj", "{6CED6024-5E20-4AFB-B93F-B96E346167C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfDragAnimatedControl.Example", "WpfDragAnimatedControl.Example\WpfDragAnimatedControl.Example.csproj", "{6CED6024-5E20-4AFB-B93F-B96E346167C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

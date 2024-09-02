@@ -15,9 +15,9 @@ namespace WpfDragAnimatedControl.Example.ViewModels
         private bool _autoSizeMode = false;
         private double _multiplier = 1d;
 
-        private bool IS_SAME_SIZE = true;
-        private double SAME_SIZE_WIDTH = 248d;
-        private double SAME_SIZE_HEIGHT = 350d;
+        private const bool IS_SAME_SIZE = true;
+        private const double SAME_SIZE_WIDTH = 248d;
+        private const double SAME_SIZE_HEIGHT = 350d;
 
         #endregion
 

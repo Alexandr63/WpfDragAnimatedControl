@@ -1,6 +1,7 @@
-# WpfDragAnimatedPanel
-Panel for WPF that re-order elements when dragging items and example with resize of items.  
+# WpfDragAnimatedControl
+WPF контрол для отображения списка объектов различных размеров с возможностью перетаскивания объектов с помощью мыши.
 
 ![Alt text](Demo.gif?raw=true "App Demo")  
 
-Based on https://github.com/rulyotano/wpf-drag-animated-panel  
+Основан на https://github.com/rulyotano/wpf-drag-animated-panel  
+Так же несколько полезных идей позаимствовал отсюда https://www.codeproject.com/Tips/721158/WPF-Animated-Arrange-Panel
