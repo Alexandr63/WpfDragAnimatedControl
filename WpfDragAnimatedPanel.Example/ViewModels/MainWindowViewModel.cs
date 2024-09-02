@@ -15,6 +15,10 @@ namespace WpfDragAnimatedPanel.Example.ViewModels
         private bool _autoSizeMode = false;
         private double _multiplier = 1d;
 
+        private bool IS_SAME_SIZE = true;
+        private double SAME_SIZE_WIDTH = 248d;
+        private double SAME_SIZE_HEIGHT = 350d;
+
         #endregion
 
         #region Ctor
@@ -47,8 +51,19 @@ namespace WpfDragAnimatedPanel.Example.ViewModels
                 new ImageModel { ImageSource = BitmapImageHelper.FileToBitmapImage("Images2/9.jpg"), Tag = "9" }
             };
 
-            const double START_HEIGHT = 200d;
-            Multiplier *= START_HEIGHT / Images.Max(x => x.Height);
+            if (IS_SAME_SIZE)
+            {
+                foreach (ImageModel imageModel in Images)
+                {
+                    imageModel.Width = SAME_SIZE_WIDTH;
+                    imageModel.Height = SAME_SIZE_HEIGHT;
+                }    
+            }
+            else
+            {
+                const double START_HEIGHT = 200d;
+                Multiplier *= START_HEIGHT / Images.Max(x => x.Height);
+            }
 
             Resize(Images);
         }
@@ -109,6 +124,15 @@ namespace WpfDragAnimatedPanel.Example.ViewModels
                 new ImageModel {ImageSource = BitmapImageHelper.FileToBitmapImage("Images/8.jpg"), Tag = "08"},
                 new ImageModel {ImageSource = BitmapImageHelper.FileToBitmapImage("Images/9.jpg"), Tag = "09"}
             };
+
+            if (IS_SAME_SIZE)
+            {
+                foreach (ImageModel imageModel in images)
+                {
+                    imageModel.Width = SAME_SIZE_WIDTH;
+                    imageModel.Height = SAME_SIZE_HEIGHT;
+                }
+            }
 
             Resize(images);
             

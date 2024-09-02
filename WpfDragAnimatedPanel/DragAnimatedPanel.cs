@@ -42,32 +42,6 @@ namespace WpfDragAnimatedPanel
 
         #region Properties
 
-        public double FixedItemWidth
-        {
-            get => (double)GetValue(FixedItemWidthProperty);
-            set => SetValue(FixedItemWidthProperty, value);
-        }
-
-        public static readonly DependencyProperty FixedItemWidthProperty = DependencyProperty.Register(nameof(FixedItemWidth), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(248d, MeasureControlByDependencyPropertyChanged));
-
-        public double FixedItemHeight
-        {
-            get => (double)GetValue(FixedItemHeightProperty);
-            set => SetValue(FixedItemHeightProperty, value);
-        }
-
-        public static readonly DependencyProperty FixedItemHeightProperty = DependencyProperty.Register(nameof(FixedItemHeight), typeof(double), typeof(DragAnimatedPanel), new UIPropertyMetadata(350d, MeasureControlByDependencyPropertyChanged));
-
-
-        public bool IsFixedItemSize
-        {
-            get => (bool)GetValue(IsFixedItemSizeProperty);
-            set => SetValue(IsFixedItemSizeProperty, value);
-        }
-
-        public static readonly DependencyProperty IsFixedItemSizeProperty = DependencyProperty.Register(nameof(IsFixedItemSize), typeof(bool), typeof(DragAnimatedPanel), new UIPropertyMetadata(false, MeasureControlByDependencyPropertyChanged));
-
-
         public FillType FillType
         {
             get => (FillType)GetValue(FillTypeProperty);
@@ -152,11 +126,11 @@ namespace WpfDragAnimatedPanel
                 case FillType.Row:
                     _layoutStrategy = new RowLayoutStrategy();
                     break;
-                case FillType.Wrap:
-                    _layoutStrategy = new WrapLayoutStrategy();
-                    break;
                 case FillType.Table:
                     _layoutStrategy = new TableLayoutStrategy();
+                    break;
+                case FillType.Wrap:
+                    _layoutStrategy = new WrapLayoutStrategy();
                     break;
                 default:
                     throw new ArgumentException($"Unknown FillType {FillType}");
@@ -218,23 +192,6 @@ namespace WpfDragAnimatedPanel
                     }
                 }
             }
-
-            // TODO добавить вариант с фиксированным размером
-            // Старая версия с фиксированным размером 
-            //int elementIndex = 0;
-            //foreach (UIElement child in Children)
-            //{
-            //    elementIndex++;
-            //    if (elementIndex < Children.Count)
-            //    {
-            //        colPosition += _layoutStrategy.GetColumnWidthByElementIndex(elementIndex);
-            //        if (colPosition + 1 > _calculatedSize.Width)
-            //        {
-            //            colPosition = 0;
-            //            rowPosition += _layoutStrategy.GetRowHeightByElementIndex(elementIndex);
-            //        }
-            //    }
-            //}
         }
 
         private void AnimateTo(UIElement child, double x, double y, int duration)

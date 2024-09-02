@@ -2,9 +2,9 @@
 {
     public enum FillType
     {
-        Wrap,
-        Row,
         Column,
-        Table
+        Row,
+        Table,
+        Wrap
     }
 }
