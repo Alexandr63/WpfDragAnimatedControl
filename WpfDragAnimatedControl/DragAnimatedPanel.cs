@@ -59,7 +59,6 @@ namespace WpfDragAnimatedControl
 
         protected override Size MeasureOverride(Size availableSize)
         {
-System.Diagnostics.Debug.WriteLine($">>> {DateTime.Now.Ticks} MeasureOverride {availableSize}");
             foreach (UIElement child in Children)
             {
                 child.Measure(GetDragItemSize(child).GetSize());
