@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -22,6 +23,8 @@ namespace WpfDragAnimatedControl.LayoutStrategies
 
         public void MeasureLayout(Size availableSize, List<Size> measures, bool isDragging)
         {
+System.Diagnostics.Debug.WriteLine($">>> {DateTime.Now.Ticks} MeasureLayout {availableSize}");
+
             _height = 0d;
             _row.Clear();
 

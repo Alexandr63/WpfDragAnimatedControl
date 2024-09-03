@@ -4,14 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        xmlns:converters="clr-namespace:WpfDragAnimatedControl.Example.Converters"
         xmlns:wpfDragAnimatedControl="clr-namespace:WpfDragAnimatedControl;assembly=WpfDragAnimatedControl"
         Width="800"
         Height="600"
         Background="DimGray"
         Title="MainWindow">
     <Window.Resources>
-        <converters:HorizontalScrollBarVisibilityConverter x:Key="HorizontalScrollBarVisibilityConverter"/>
         <ObjectDataProvider x:Key="FillTypes"
                             MethodName="GetValues" 
                             ObjectType="{x:Type system:Enum}">
@@ -42,15 +40,16 @@
             <ComboBox Width="200"
                       VerticalAlignment="Center"
                       ItemsSource="{Binding Source={StaticResource FillTypes}}"
-                      SelectedItem="{Binding FillType, Mode=TwoWay}"
-                      SelectionChanged="FillTypesChangedEventHandler"/>
+                      SelectedItem="{Binding FillType, ElementName=TestListBox, Mode=TwoWay}" />
         </StackPanel>
 
         <CheckBox Grid.Row="1" 
                   Grid.Column="0"
+                  Grid.ColumnSpan="3"
                   Margin="5"
-                  IsChecked="{Binding AutoSizeMode}"
-                  Click="AutoSizeModeChangedEventHandler">Auto size for vertical and horizontal mode.</CheckBox>
+                  IsChecked="{Binding AutoSizeMode, ElementName=TestListBox, Mode=TwoWay}">
+            Auto size for vertical and horizontal mode.
+        </CheckBox>
 
         <Button Grid.Row="0"
                 Grid.Column="1"
@@ -58,43 +57,35 @@
                 Width="100"
                 Click="AddItemsButtonClickEventHandler">Add items</Button>
 
-
         <Button Grid.Row="0"
                 Grid.Column="2"
                 Margin="5"
                 Width="100"
                 Click="DataToOutputButtonClickEventHandler">Data to output</Button>
 
-        <ListBox Grid.Row="2"
-                 Grid.Column="0"
-                 Grid.ColumnSpan="3"
-                 x:Name="TestListBox"
-                 Margin="5"
-                 ItemsSource="{Binding Images, Mode=TwoWay}"
-                 Background="WhiteSmoke"
-                 ScrollViewer.HorizontalScrollBarVisibility="{Binding FillType, Converter={StaticResource HorizontalScrollBarVisibilityConverter}}"
-                 PreviewMouseWheel="TestListBoxPreviewMouseWheelEventHandler"
-                 SizeChanged="TestListBoxSizeChangedEventHandler">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <wpfDragAnimatedControl:DragAnimatedPanel FillType="{Binding FillType}"
-                                                              HorizontalAlignment="Left"
-                                                              Background="DarkGray"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
+        <wpfDragAnimatedControl:DragAnimatedListBox Grid.Row="2"
+                                                    Grid.Column="0"
+                                                    Grid.ColumnSpan="3"
+                                                    x:Name="TestListBox"
+                                                    Margin="5"
+                                                    MinItemSize="75"
+                                                    MaxItemSize="2500"
+                                                    ItemsSource="{Binding Images, Mode=TwoWay}"
+                                                    ItemSizeMultiplier="{Binding ItemSizeMultiplier, Mode=TwoWay}"
+                                                    Background="Gray">
+            <wpfDragAnimatedControl:DragAnimatedListBox.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="10"
                             Width="{Binding Width}" 
                             Height="{Binding Height}"
-                            Background="LightBlue" 
+                            Background="DimGray" 
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center">
                         <Image Source="{Binding ImageSource}" />
                     </Border>
-                    
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </wpfDragAnimatedControl:DragAnimatedListBox.ItemTemplate>
+        </wpfDragAnimatedControl:DragAnimatedListBox>
+        
     </Grid>
 </Window>

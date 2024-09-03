@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="WpfDragAnimatedControl.DragAnimatedListBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfDragAnimatedControl"
+             xmlns:converters="clr-namespace:WpfDragAnimatedControl.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:HorizontalScrollBarVisibilityConverter x:Key="ScrollBarVisibilityConverter"/>
+    </UserControl.Resources>
+    <ListBox x:Name="InnerListBox"
+             AutomationProperties.AutomationId="DragAnimatedListBox_InnerListBox" 
+             Background="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DragAnimatedListBox}}}"
+             ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DragAnimatedListBox}}, Mode=TwoWay}"
+             ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DragAnimatedListBox}}}"
+             ScrollViewer.HorizontalScrollBarVisibility="{Binding FillType, Converter={StaticResource ScrollBarVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DragAnimatedListBox}}}"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             PreviewMouseWheel="InnerListBoxPreviewMouseWheelEventHandler"
+             SizeChanged="InnerListBoxSizeChangedEventHandler"
+             Focusable="False"
+             KeyboardNavigation.DirectionalNavigation="None">
+        <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+                <local:DragAnimatedPanel FillType="{Binding FillType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DragAnimatedListBox}}}"
+                                         AnimationMilliseconds="{Binding AnimationMilliseconds, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DragAnimatedListBox}}}"
+                                         HorizontalAlignment="Left"/>
+            </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+        <ListBox.ItemContainerStyle>
+            <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <ContentPresenter />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ListBox.ItemContainerStyle>
+    </ListBox>
+</UserControl>

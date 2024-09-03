@@ -23,15 +23,10 @@ namespace WpfDragAnimatedControl
 
         #region Ctor
 
-        static DragAnimatedPanel()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DragAnimatedPanel), new FrameworkPropertyMetadata(typeof(DragAnimatedPanel)));
-        }
-
-        public DragAnimatedPanel() : base()
+        public DragAnimatedPanel()
         {
             UpdateLayoutStrategy();
-
+            
             AddHandler(Mouse.MouseMoveEvent, new MouseEventHandler(OnMouseMove), false);
             AddHandler(MouseDownEvent, new MouseButtonEventHandler(OnMouseDown), true);
             MouseLeftButtonUp += OnMouseUp;
@@ -49,7 +44,7 @@ namespace WpfDragAnimatedControl
         }
 
         public static readonly DependencyProperty FillTypeProperty = DependencyProperty.Register(nameof(FillType), typeof(FillType), typeof(DragAnimatedPanel), new UIPropertyMetadata(FillType.Wrap, FillTypePropertyDependencyPropertyChanged));
-        
+
         public int AnimationMilliseconds
         {
             get => (int)GetValue(AnimationMillisecondsProperty);
@@ -64,6 +59,7 @@ namespace WpfDragAnimatedControl
 
         protected override Size MeasureOverride(Size availableSize)
         {
+System.Diagnostics.Debug.WriteLine($">>> {DateTime.Now.Ticks} MeasureOverride {availableSize}");
             foreach (UIElement child in Children)
             {
                 child.Measure(GetDragItemSize(child).GetSize());
@@ -80,7 +76,7 @@ namespace WpfDragAnimatedControl
                 {
                     childSizes.Add(child.DesiredSize);
                 }
-                
+
                 _layoutStrategy.MeasureLayout(availableSize, childSizes, DraggedElement != null);
 
                 _calculatedSize = _layoutStrategy.ResultSize;
@@ -108,7 +104,7 @@ namespace WpfDragAnimatedControl
             }
 
             AnimateAll();
-            
+
             return _calculatedSize;
         }
 
@@ -143,7 +139,7 @@ namespace WpfDragAnimatedControl
         {
             return (IDragItemSize)((FrameworkElement)element).DataContext;
         }
-        
+
         private UIElement GetChildThatHasMouseOver()
         {
             return ControlsHelper.GetParent(Mouse.DirectlyOver as DependencyObject, (ve) => Children.Contains(ve as UIElement)) as UIElement;
@@ -211,7 +207,7 @@ namespace WpfDragAnimatedControl
                 DecelerationRatio = 0.7
             };
         }
-        
+
         private static void MeasureControlByDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((DragAnimatedPanel)d).InvalidateMeasure();
