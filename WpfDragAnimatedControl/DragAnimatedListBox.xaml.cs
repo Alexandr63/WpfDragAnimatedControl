@@ -124,7 +124,19 @@ namespace WpfDragAnimatedControl
         }
 
         public static readonly DependencyProperty MaxItemSizeProperty = DependencyProperty.Register(nameof(MaxItemSize), typeof(double), typeof(DragAnimatedListBox), new UIPropertyMetadata(1500d));
-        
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Прокрутить скролл до заданного объекта.
+        /// </summary>
+        public void ScrollIntoView(object item)
+        {
+            InnerListBox.ScrollIntoView(item);
+        }
+
         #endregion
 
         #region Private Methods
