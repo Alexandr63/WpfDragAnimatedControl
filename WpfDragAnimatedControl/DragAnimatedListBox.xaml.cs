@@ -171,18 +171,16 @@ namespace WpfDragAnimatedControl
             // Перешли в режим автозаполнения, он актуален только для заполнения в столбец или в строку
             if (AutoSizeMode)
             {
-                const int VERTICAL_SCROLL_OFFSET = 5;
-
                 switch (FillType)
                 {
                     case FillType.Row:
-                        double height = InnerListBox.ActualHeight - SystemParameters.VerticalScrollBarWidth - VERTICAL_SCROLL_OFFSET;
+                        double height = SystemParameters.HorizontalScrollBarHeight * 2 < InnerListBox.ActualHeight ? InnerListBox.ActualHeight - SystemParameters.HorizontalScrollBarHeight * 2 : InnerListBox.ActualHeight;
                         multiplier = height / items.Max(x => x.Height);
                         Resize(items, multiplier);
                         dragPanel.InvalidateMeasure();
                         return;
                     case FillType.Column:
-                        double width = InnerListBox.ActualWidth - SystemParameters.VerticalScrollBarWidth - VERTICAL_SCROLL_OFFSET;
+                        double width = SystemParameters.VerticalScrollBarWidth * 2 < InnerListBox.ActualWidth ? InnerListBox.ActualWidth - SystemParameters.VerticalScrollBarWidth * 2 : InnerListBox.ActualWidth;
                         multiplier = width / items.Max(x => x.Width);
                         Resize(items, multiplier);
                         dragPanel.InvalidateMeasure();
