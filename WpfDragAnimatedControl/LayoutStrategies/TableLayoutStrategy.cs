@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -6,7 +6,7 @@ using System.Windows;
 namespace WpfDragAnimatedControl.LayoutStrategies
 {
     /// <summary>
-    /// Стратегия отображения дочерних элементов в виде таблицы с построчным заполнением с различной шириной строк.
+    /// РЎС‚СЂР°С‚РµРіРёСЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґРѕС‡РµСЂРЅРёС… СЌР»РµРјРµРЅС‚РѕРІ РІ РІРёРґРµ С‚Р°Р±Р»РёС†С‹ СЃ РїРѕСЃС‚СЂРѕС‡РЅС‹Рј Р·Р°РїРѕР»РЅРµРЅРёРµРј СЃ СЂР°Р·Р»РёС‡РЅРѕР№ С€РёСЂРёРЅРѕР№ СЃС‚СЂРѕРє.
     /// </summary>
     public class TableLayoutStrategy : ILayoutStrategy
     {
@@ -168,24 +168,24 @@ namespace WpfDragAnimatedControl.LayoutStrategies
         private int GetColumnCount(Size availableSize, List<Size> measures)
         {
             int columnsCount;
-            // Цикл по возможному количеству колонок. От максимального числа к минимальному.
+            // Р¦РёРєР» РїРѕ РІРѕР·РјРѕР¶РЅРѕРјСѓ РєРѕР»РёС‡РµСЃС‚РІСѓ РєРѕР»РѕРЅРѕРє. РћС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ С‡РёСЃР»Р° Рє РјРёРЅРёРјР°Р»СЊРЅРѕРјСѓ.
             for (columnsCount = measures.Count; columnsCount > 0; columnsCount--)
             {
-                // Если columnCount == 1 - значит будет одна колонка в таблице и, скорее всего, она выйдет за пределы контрола.
+                // Р•СЃР»Рё columnCount == 1 - Р·РЅР°С‡РёС‚ Р±СѓРґРµС‚ РѕРґРЅР° РєРѕР»РѕРЅРєР° РІ С‚Р°Р±Р»РёС†Рµ Рё, СЃРєРѕСЂРµРµ РІСЃРµРіРѕ, РѕРЅР° РІС‹Р№РґРµС‚ Р·Р° РїСЂРµРґРµР»С‹ РєРѕРЅС‚СЂРѕР»Р°.
                 if (columnsCount == 1)
                 {
                     break;
                 }
 
-                // Считаем длину строки
+                // РЎС‡РёС‚Р°РµРј РґР»РёРЅСѓ СЃС‚СЂРѕРєРё
                 double rowWidth = 0d;
                 for (int columnIndex = 0; columnIndex < columnsCount; columnIndex++)
                 {
-                    // Получаем максимальную ширину колонки
+                    // РџРѕР»СѓС‡Р°РµРј РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ С€РёСЂРёРЅСѓ РєРѕР»РѕРЅРєРё
                     rowWidth += GetMaxColumnSize(measures, columnsCount, columnIndex);
                 }
 
-                // Если длина строки меньше заданной величины - мы нашли максимальное число колонок в таблице
+                // Р•СЃР»Рё РґР»РёРЅР° СЃС‚СЂРѕРєРё РјРµРЅСЊС€Рµ Р·Р°РґР°РЅРЅРѕР№ РІРµР»РёС‡РёРЅС‹ - РјС‹ РЅР°С€Р»Рё РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёСЃР»Рѕ РєРѕР»РѕРЅРѕРє РІ С‚Р°Р±Р»РёС†Рµ
                 if (rowWidth < availableSize.Width)
                 {
                     break;

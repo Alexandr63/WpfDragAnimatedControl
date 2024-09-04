@@ -249,12 +249,9 @@ namespace WpfDragAnimatedControl.LayoutStrategies
 
         private void UpdateRowHeightsInLayoutInfos()
         {
-            for (int rowIndex = 0; rowIndex < _itemsLayoutInfos.Max(x => x.RowIndex); rowIndex++)
+            foreach (DragItemLayoutInfo layoutInfo in _itemsLayoutInfos)
             {
-                foreach (DragItemLayoutInfo layoutInfo in _itemsLayoutInfos.Where(x => x.RowIndex == rowIndex))
-                {
-                    layoutInfo.RowHeight = _rowHeights[rowIndex];
-                }
+                layoutInfo.RowHeight = _rowHeights[layoutInfo.RowIndex];
             }
         }
 
