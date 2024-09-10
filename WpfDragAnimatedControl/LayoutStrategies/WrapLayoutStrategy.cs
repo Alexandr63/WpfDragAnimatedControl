@@ -44,7 +44,7 @@ namespace WpfDragAnimatedControl.LayoutStrategies
 
             int rowIndex = 0;
             int columnIndex = 0;
-            
+
             // Заполняем строки
             while (true)
             {
@@ -251,7 +251,10 @@ namespace WpfDragAnimatedControl.LayoutStrategies
         {
             foreach (DragItemLayoutInfo layoutInfo in _itemsLayoutInfos)
             {
-                layoutInfo.RowHeight = _rowHeights[layoutInfo.RowIndex];
+                if (_rowHeights.Count < layoutInfo.RowIndex)
+                {
+                    layoutInfo.RowHeight = _rowHeights[layoutInfo.RowIndex];
+                }
             }
         }
 

@@ -158,13 +158,18 @@ namespace WpfDragAnimatedControl
                 return;
             }
 
-            DragAnimatedPanel dragPanel = ControlsHelper.GetDragAnimatedPanel(InnerListBox);
-
             List<IDragItemSize> items = new List<IDragItemSize>();
             foreach (object item in InnerListBox.ItemsSource)
             {
                 items.Add((IDragItemSize)item);
             }
+
+            if (!items.Any())
+            {
+                return;
+            }
+
+            DragAnimatedPanel dragPanel = ControlsHelper.GetDragAnimatedPanel(InnerListBox);
 
             double multiplier;
 
